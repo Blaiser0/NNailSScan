@@ -33,6 +33,11 @@
     <string name="home_recent_activity">Actividad Reciente</string>
     <string name="home_no_activity">Aún no hay escaneos registrados.</string>
     <string name="home_view_full_history">Ver historial completo</string>
+    <string name="dictionary_title">Aprende sobre tus uñas</string>
+    <string name="term_detail_description">Descripción</string>
+    <string name="term_detail_symptoms">Síntomas</string>
+    <string name="term_detail_disclaimer_title">Descargo de Responsabilidad Médico</string>
+    <string name="term_detail_disclaimer_body">Este análisis es solo informativo y no reemplaza el diagnóstico de un profesional médico. Consulte a un dermatólogo para un diagnóstico preciso.</string>
     <string name="history_title">Historial</string>
     <string name="history_empty">No hay actividad registrada.</string>
     <string name="profile_title">Perfil</string>

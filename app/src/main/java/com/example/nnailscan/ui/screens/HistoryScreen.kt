@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nnailscan.R
+import com.example.nnailscan.ui.components.NailScanScreenHeader
 import com.example.nnailscan.ui.components.RecentActivityCard
 import com.example.nnailscan.ui.theme.NailScanBackground
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
@@ -32,6 +33,7 @@ import com.example.nnailscan.util.formatScanResult
 @Composable
 fun HistoryScreen(
     modifier: Modifier = Modifier,
+    onBack: (() -> Unit)? = null,
     viewModel: HistoryViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -43,15 +45,22 @@ fun HistoryScreen(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp, vertical = 24.dp),
     ) {
-        Text(
-            text = stringResource(R.string.history_title),
-            style = Typography.titleMedium.copy(
-                color = NailScanTextPrimary,
-                fontWeight = FontWeight.Bold,
-            ),
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
+        if (onBack != null) {
+            NailScanScreenHeader(
+                title = stringResource(R.string.history_title),
+                onBack = onBack,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        } else {
+            Text(
+                text = stringResource(R.string.history_title),
+                style = Typography.titleMedium.copy(
+                    color = NailScanTextPrimary,
+                    fontWeight = FontWeight.Bold,
+                ),
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+        }
 
         if (uiState.scans.isEmpty()) {
             Text(

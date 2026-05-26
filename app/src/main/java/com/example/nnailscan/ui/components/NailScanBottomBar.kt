@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.nnailscan.ui.theme.NailScanBorder
+import com.example.nnailscan.ui.theme.NailScanButton
 import com.example.nnailscan.ui.theme.NailScanSurface
 import com.example.nnailscan.ui.theme.NailScanTextPlaceholder
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
@@ -32,7 +33,7 @@ import com.example.nnailscan.ui.theme.Typography
 
 enum class MainTab {
     Home,
-    History,
+    Dictionary,
     Profile,
 }
 
@@ -58,8 +59,8 @@ fun NailScanBottomBar(
         )
         BottomBarItem(
             icon = Icons.AutoMirrored.Outlined.MenuBook,
-            selected = selectedTab == MainTab.History,
-            onClick = { onTabSelected(MainTab.History) },
+            selected = selectedTab == MainTab.Dictionary,
+            onClick = { onTabSelected(MainTab.Dictionary) },
         )
         BottomBarItem(
             icon = Icons.Outlined.Person,
@@ -85,7 +86,7 @@ private fun BottomBarItem(
             imageVector = icon,
             contentDescription = null,
             modifier = Modifier.size(28.dp),
-            tint = if (selected) NailScanTextPrimary else NailScanTextPlaceholder,
+            tint = if (selected) NailScanButton else NailScanTextPlaceholder,
         )
     }
 }
