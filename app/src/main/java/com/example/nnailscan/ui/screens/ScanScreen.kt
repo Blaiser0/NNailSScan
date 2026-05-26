@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,18 +30,27 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.nnailscan.NailClassifier
 import com.example.nnailscan.R
+import com.example.nnailscan.firebase.AuthRepository
+import com.example.nnailscan.firebase.FirestoreRepository
 import com.example.nnailscan.ui.components.NailScanPrimaryButton
+import com.example.nnailscan.ui.components.NailScanScreenHeader
 import com.example.nnailscan.ui.theme.NailScanBackground
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
 import com.example.nnailscan.ui.theme.Typography
+import kotlinx.coroutines.launch
 
 @Composable
-fun ScanScreen() {
+fun ScanScreen(
+    onBack: () -> Unit = {},
+) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val authRepository = remember { AuthRepository() }
+    val firestoreRepository = remember { FirestoreRepository() }
+
     var previewBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var resultText by remember { mutableStateOf(context.getString(R.string.result_placeholder)) }
 
@@ -56,6 +66,12 @@ fun ScanScreen() {
         classifyBitmap(context, bitmap) { label, confidence ->
             previewBitmap = bitmap
             resultText = context.getString(R.string.result_format, label, confidence)
+            saveScanToFirestore(
+                scope = scope,
+                authRepository = authRepository,
+                firestoreRepository = firestoreRepository,
+                resultLabel = label,
+            )
         }
     }
 
@@ -69,6 +85,12 @@ fun ScanScreen() {
         classifyBitmap(context, bitmap) { label, confidence ->
             previewBitmap = bitmap
             resultText = context.getString(R.string.result_format, label, confidence)
+            saveScanToFirestore(
+                scope = scope,
+                authRepository = authRepository,
+                firestoreRepository = firestoreRepository,
+                resultLabel = label,
+            )
         }
     }
 
@@ -77,14 +99,11 @@ fun ScanScreen() {
             .fillMaxSize()
             .background(NailScanBackground)
             .verticalScroll(rememberScrollState())
-            .padding(24.dp),
+            .padding(horizontal = 24.dp, vertical = 32.dp),
     ) {
-        Text(
-            text = stringResource(R.string.scan_title),
-            style = Typography.titleMedium.copy(
-                color = NailScanTextPrimary,
-                fontWeight = FontWeight.Bold,
-            ),
+        NailScanScreenHeader(
+            title = stringResource(R.string.scan_title),
+            onBack = onBack,
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -120,6 +139,18 @@ fun ScanScreen() {
             text = resultText,
             style = Typography.bodyLarge.copy(color = NailScanTextPrimary),
         )
+    }
+}
+
+private fun saveScanToFirestore(
+    scope: kotlinx.coroutines.CoroutineScope,
+    authRepository: AuthRepository,
+    firestoreRepository: FirestoreRepository,
+    resultLabel: String,
+) {
+    val userId = authRepository.currentUser?.uid ?: return
+    scope.launch {
+        firestoreRepository.saveScan(userId, resultLabel)
     }
 }
 

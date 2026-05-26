@@ -3,7 +3,6 @@ package com.example.nnailscan.ui.screens
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -33,31 +32,34 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nnailscan.R
-import com.example.nnailscan.ui.components.BrandHeaderSize
-import com.example.nnailscan.ui.components.NailScanBrandHeader
+import com.example.nnailscan.ui.components.NailScanLegalCheckbox
 import com.example.nnailscan.ui.components.NailScanPrimaryButton
+import com.example.nnailscan.ui.components.NailScanScreenHeader
 import com.example.nnailscan.ui.components.NailScanTextField
 import com.example.nnailscan.ui.theme.NailScanBackground
 import com.example.nnailscan.ui.theme.NailScanLink
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
 import com.example.nnailscan.ui.theme.Typography
-import com.example.nnailscan.ui.viewmodel.LoginViewModel
+import com.example.nnailscan.ui.viewmodel.RegisterViewModel
 
 @Composable
-fun LoginScreen(
-    onLoginSuccess: () -> Unit,
-    onForgotPassword: () -> Unit = {},
-    onRegister: () -> Unit = {},
-    viewModel: LoginViewModel = viewModel(),
+fun RegisterScreen(
+    onBack: () -> Unit,
+    onRegisterSuccess: () -> Unit,
+    onNavigateToLogin: () -> Unit,
+    onNavigateToTerms: () -> Unit,
+    viewModel: RegisterViewModel = viewModel(),
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
 
+    var fullName by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
-
-    val canSubmit = email.isNotBlank() && password.isNotBlank() && !uiState.isLoading
+    var confirmPasswordVisible by rememberSaveable { mutableStateOf(false) }
+    var termsAccepted by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(uiState.errorMessage) {
         uiState.errorMessage?.let { message ->
@@ -71,29 +73,36 @@ fun LoginScreen(
             .fillMaxSize()
             .background(NailScanBackground)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 28.dp, vertical = 40.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+            .padding(horizontal = 24.dp, vertical = 32.dp),
     ) {
-        NailScanBrandHeader(
-            size = BrandHeaderSize.Compact,
-            showTagline = false,
+        NailScanScreenHeader(
+            title = stringResource(R.string.register_title),
+            onBack = onBack,
         )
 
-        Spacer(modifier = Modifier.height(36.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         NailScanTextField(
-            label = stringResource(R.string.login_email_label),
+            label = stringResource(R.string.register_full_name_label),
+            value = fullName,
+            onValueChange = { fullName = it },
+            placeholder = stringResource(R.string.register_full_name_placeholder),
+        )
+
+        Spacer(modifier = Modifier.height(18.dp))
+
+        NailScanTextField(
+            label = stringResource(R.string.register_email_label),
             value = email,
             onValueChange = { email = it },
-            placeholder = stringResource(R.string.login_email_placeholder),
+            placeholder = stringResource(R.string.register_email_placeholder),
             keyboardType = KeyboardType.Email,
         )
 
         Spacer(modifier = Modifier.height(18.dp))
 
         NailScanTextField(
-            label = stringResource(R.string.login_password_label),
+            label = stringResource(R.string.register_password_label),
             value = password,
             onValueChange = { password = it },
             isPassword = true,
@@ -102,49 +111,58 @@ fun LoginScreen(
             keyboardType = KeyboardType.Password,
         )
 
-        Spacer(modifier = Modifier.height(28.dp))
+        Spacer(modifier = Modifier.height(18.dp))
+
+        NailScanTextField(
+            label = stringResource(R.string.register_confirm_password_label),
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            isPassword = true,
+            passwordVisible = confirmPasswordVisible,
+            onTogglePasswordVisibility = { confirmPasswordVisible = !confirmPasswordVisible },
+            keyboardType = KeyboardType.Password,
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        NailScanLegalCheckbox(
+            checked = termsAccepted,
+            onCheckedChange = { termsAccepted = it },
+            modifier = Modifier.clickable(onClick = onNavigateToTerms),
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         NailScanPrimaryButton(
-            text = stringResource(R.string.login_button),
+            text = stringResource(R.string.register_button),
             onClick = {
-                viewModel.signIn(
+                viewModel.register(
+                    fullName = fullName,
                     email = email,
                     password = password,
-                    onSuccess = onLoginSuccess,
+                    confirmPassword = confirmPassword,
+                    termsAccepted = termsAccepted,
+                    onSuccess = onRegisterSuccess,
                 )
             },
-            enabled = canSubmit,
+            enabled = !uiState.isLoading,
         )
 
         Spacer(modifier = Modifier.height(28.dp))
 
-        Text(
-            text = stringResource(R.string.login_forgot_password),
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onForgotPassword),
-            style = Typography.labelMedium.copy(
-                color = NailScanLink,
-                fontWeight = FontWeight.Bold,
-            ),
-            textAlign = TextAlign.Center,
-        )
-
-        Spacer(modifier = Modifier.height(14.dp))
-
-        val registerText = buildAnnotatedString {
-            append(stringResource(R.string.login_no_account_prefix))
+        val loginText = buildAnnotatedString {
+            append(stringResource(R.string.register_has_account_prefix))
             append(" ")
             withStyle(SpanStyle(fontWeight = FontWeight.Bold, color = NailScanLink)) {
-                append(stringResource(R.string.login_register))
+                append(stringResource(R.string.register_login_link))
             }
         }
 
         Text(
-            text = registerText,
+            text = loginText,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(onClick = onRegister),
+                .clickable(onClick = onNavigateToLogin),
             style = Typography.bodyMedium.copy(color = NailScanTextPrimary),
             textAlign = TextAlign.Center,
         )
