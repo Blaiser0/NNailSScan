@@ -1,0 +1,50 @@
+# ── Android / Gradle ──
+*.iml
+.gradle/
+/build/
+/app/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+local.properties
+
+# ── Android Studio / IDE ──
+.idea/
+*.ipr
+*.iws
+.DS_Store
+Thumbs.db
+
+# ── Python / ML ──
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Modelos entrenados (regenerables; evita commits pesados)
+ml/output/
+modelo nuevo/*.keras
+modelo nuevo/*.tflite
+modelo nuevo/clases.json
+*.h5
+
+# TFLite en assets (exportar con export_tflite.py / entrenar_modelo.py)
+app/src/main/assets/*.tflite
+
+# ── Dataset local (no subir miles de imágenes al repo) ──
+Dataset/
+
+# ── Logs / temporales ──
+*.log
+*.tmp
+
+# ── Keystores / secretos ──
+*.jks
+*.keystore
+google-services.json

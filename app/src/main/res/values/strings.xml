@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">NailScan</string>
+    <string name="app_tagline">Tu salud ungueal, al instante</string>
+    <string name="screen_title">Diagnóstico de uñas</string>
+    <string name="scan_title">Analizar uña</string>
+    <string name="select_image">Seleccionar imagen de la galería</string>
+    <string name="take_photo">Tomar foto con la cámara</string>
+    <string name="image_preview_description">Vista previa de la imagen seleccionada</string>
+    <string name="result_placeholder">Selecciona o captura una imagen para analizarla.</string>
+    <string name="analyzing">Analizando imagen…</string>
+    <string name="result_format">Resultado: %1$s\nConfianza: %2$.1f%%</string>
+    <string name="login_email_label">Correo Electrónico</string>
+    <string name="login_email_placeholder">correo@ejemplo.com</string>
+    <string name="login_password_label">Contraseña</string>
+    <string name="login_button">Iniciar Sesión</string>
+    <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_no_account_prefix">¿No tienes cuenta?</string>
+    <string name="login_register">Regístrate</string>
+    <string name="error_image_load">No se pudo cargar la imagen seleccionada.</string>
+    <string name="error_camera_cancelled">Captura de foto cancelada.</string>
+    <string name="error_model_missing">No se encontró el modelo. Copia nail_model_nuevo.tflite a app/src/main/assets/ y recompila.</string>
+    <string name="error_generic">Error al clasificar la imagen. Inténtalo de nuevo.</string>
+</resources>
