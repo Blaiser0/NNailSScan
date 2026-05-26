@@ -41,6 +41,12 @@
     <string name="history_title">Historial</string>
     <string name="history_empty">No hay actividad registrada.</string>
     <string name="profile_title">Perfil</string>
+    <string name="profile_edit">Editar</string>
+    <string name="profile_support_title">Soporte Técnico</string>
+    <string name="profile_support_subtitle">Preguntas frecuentes / Contacto</string>
+    <string name="profile_feedback_title">Retroalimentación</string>
+    <string name="profile_feedback_subtitle">Calificar App / Sugerir afección</string>
+    <string name="profile_about_title">Acerca de NailScan</string>
     <string name="profile_name_label">Nombre</string>
     <string name="profile_email_label">Correo</string>
     <string name="profile_logout">Cerrar sesión</string>
