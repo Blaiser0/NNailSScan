@@ -14,3 +14,8 @@ fun formatScanDate(timestamp: Timestamp?): String {
 
 fun formatScanResult(result: String): String =
     "Resultado: ${result.ifBlank { "Sin resultado" }}"
+
+fun formatResultDate(millis: Long): String {
+    val formatter = SimpleDateFormat("d 'de' MMMM", Locale.forLanguageTag("es-ES"))
+    return "Fecha: ${formatter.format(Date(millis))}"
+}

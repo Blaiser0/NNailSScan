@@ -4,24 +4,42 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.nnailscan.navigation.ProfileDestination
 import com.example.nnailscan.ui.components.MainTab
 import com.example.nnailscan.ui.components.NailScanBottomBar
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun MainScreen(
     onNavigateToScan: () -> Unit,
     onLogout: () -> Unit,
+    pendingDictionaryTermIdFlow: StateFlow<String?>? = null,
+    onPendingDictionaryTermConsumed: () -> Unit = {},
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(MainTab.Home) }
     var showFullHistory by rememberSaveable { mutableStateOf(false) }
     var selectedTermId by rememberSaveable { mutableStateOf<String?>(null) }
     var profileDestination by rememberSaveable { mutableStateOf(ProfileDestination.Main) }
+
+    val pendingDictionaryTermId by pendingDictionaryTermIdFlow
+        ?.collectAsState()
+        ?: remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(pendingDictionaryTermId) {
+        pendingDictionaryTermId?.let { termId ->
+            selectedTab = MainTab.Dictionary
+            selectedTermId = termId
+            onPendingDictionaryTermConsumed()
+        }
+    }
 
     val hideBottomBar = showFullHistory ||
         selectedTermId != null ||

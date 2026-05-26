@@ -9,6 +9,7 @@ import com.example.nnailscan.firebase.FirebaseConfig
 import com.example.nnailscan.ui.screens.LoginScreen
 import com.example.nnailscan.ui.screens.MainScreen
 import com.example.nnailscan.ui.screens.RegisterScreen
+import com.example.nnailscan.ui.screens.ScanResultScreen
 import com.example.nnailscan.ui.screens.ScanScreen
 import com.example.nnailscan.ui.screens.TermsScreen
 import com.example.nnailscan.ui.screens.WelcomeScreen
@@ -20,6 +21,7 @@ object NailScanRoutes {
     const val Terms = "terms"
     const val Main = "main"
     const val Scan = "scan"
+    const val ScanResult = "scan_result"
 }
 
 @Composable
@@ -82,8 +84,15 @@ fun NailScanNavHost(
             )
         }
 
-        composable(NailScanRoutes.Main) {
+        composable(NailScanRoutes.Main) { backStackEntry ->
+            val pendingDictionaryTermId = backStackEntry.savedStateHandle
+                .getStateFlow<String?>("dictionaryTermId", null)
+
             MainScreen(
+                pendingDictionaryTermIdFlow = pendingDictionaryTermId,
+                onPendingDictionaryTermConsumed = {
+                    backStackEntry.savedStateHandle.remove<String>("dictionaryTermId")
+                },
                 onNavigateToScan = {
                     navController.navigate(NailScanRoutes.Scan)
                 },
@@ -98,6 +107,24 @@ fun NailScanNavHost(
         composable(NailScanRoutes.Scan) {
             ScanScreen(
                 onBack = { navController.popBackStack() },
+                onNavigateToResult = {
+                    navController.navigate(NailScanRoutes.ScanResult)
+                },
+            )
+        }
+
+        composable(NailScanRoutes.ScanResult) {
+            ScanResultScreen(
+                onBack = {
+                    ScanSessionState.clear()
+                    navController.popBackStack(NailScanRoutes.Main, false)
+                },
+                onLearnMore = { dictionaryTermId ->
+                    navController.getBackStackEntry(NailScanRoutes.Main)
+                        .savedStateHandle["dictionaryTermId"] = dictionaryTermId
+                    ScanSessionState.clear()
+                    navController.popBackStack(NailScanRoutes.Main, false)
+                },
             )
         }
     }

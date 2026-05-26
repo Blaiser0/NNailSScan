@@ -3,6 +3,12 @@
     <string name="app_tagline">Tu salud ungueal, al instante</string>
     <string name="screen_title">Diagnóstico de uñas</string>
     <string name="scan_title">Analizar uña</string>
+    <string name="scan_result_title">Resultado</string>
+    <string name="scan_result_diagnosis_title">Diagnóstico IA</string>
+    <string name="scan_result_detected_label">Enfermedad Detectada:</string>
+    <string name="scan_result_description_title">Descripción</string>
+    <string name="scan_result_recommendations_title">Recomendaciones</string>
+    <string name="scan_result_learn_more">Saber más</string>
     <string name="select_image">Seleccionar imagen de la galería</string>
     <string name="take_photo">Tomar foto con la cámara</string>
     <string name="image_preview_description">Vista previa de la imagen seleccionada</string>
