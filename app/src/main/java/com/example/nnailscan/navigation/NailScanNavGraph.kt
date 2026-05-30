@@ -1,11 +1,16 @@
 package com.example.nnailscan.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.nnailscan.firebase.FirebaseConfig
+import com.example.nnailscan.ui.screens.ChangePasswordScreen
+import com.example.nnailscan.ui.screens.CheckEmailScreen
+import com.example.nnailscan.ui.screens.EmailVerifiedScreen
+import com.example.nnailscan.ui.screens.ForgotPasswordScreen
 import com.example.nnailscan.ui.screens.LoginScreen
 import com.example.nnailscan.ui.screens.MainScreen
 import com.example.nnailscan.ui.screens.RegisterScreen
@@ -22,6 +27,10 @@ object NailScanRoutes {
     const val Main = "main"
     const val Scan = "scan"
     const val ScanResult = "scan_result"
+    const val ForgotPassword = "forgot_password"
+    const val CheckEmail = "check_email"
+    const val EmailVerified = "email_verified"
+    const val ChangePassword = "change_password"
 }
 
 @Composable
@@ -32,6 +41,24 @@ fun NailScanNavHost(
         NailScanRoutes.Main
     } else {
         NailScanRoutes.Welcome
+    }
+
+    LaunchedEffect(navController) {
+        PasswordResetLinkHandler.oobCodeEvents.collect {
+            navController.navigate(NailScanRoutes.EmailVerified) {
+                launchSingleTop = true
+                popUpTo(NailScanRoutes.Login) { inclusive = false }
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        if (PasswordResetState.oobCode != null && !PasswordResetState.isEmailVerified) {
+            navController.navigate(NailScanRoutes.EmailVerified) {
+                launchSingleTop = true
+                popUpTo(NailScanRoutes.Login) { inclusive = false }
+            }
+        }
     }
 
     NavHost(
@@ -55,8 +82,56 @@ fun NailScanNavHost(
                         popUpTo(NailScanRoutes.Login) { inclusive = true }
                     }
                 },
+                onForgotPassword = {
+                    navController.navigate(NailScanRoutes.ForgotPassword)
+                },
                 onRegister = {
                     navController.navigate(NailScanRoutes.Register)
+                },
+            )
+        }
+
+        composable(NailScanRoutes.ForgotPassword) {
+            ForgotPasswordScreen(
+                onBack = { navController.popBackStack() },
+                onResetLinkSent = {
+                    navController.navigate(NailScanRoutes.CheckEmail)
+                },
+            )
+        }
+
+        composable(NailScanRoutes.CheckEmail) {
+            CheckEmailScreen(
+                onBack = { navController.popBackStack() },
+                onEmailVerified = {
+                    navController.navigate(NailScanRoutes.EmailVerified)
+                },
+            )
+        }
+
+        composable(NailScanRoutes.EmailVerified) {
+            EmailVerifiedScreen(
+                onBack = { navController.popBackStack() },
+                onContinue = {
+                    navController.navigate(NailScanRoutes.ChangePassword)
+                },
+            )
+        }
+
+        composable(NailScanRoutes.ChangePassword) {
+            ChangePasswordScreen(
+                onBack = { navController.popBackStack() },
+                onVerificationRequired = {
+                    navController.navigate(NailScanRoutes.ForgotPassword) {
+                        popUpTo(NailScanRoutes.Login) { inclusive = false }
+                    }
+                },
+                onPasswordChanged = {
+                    PasswordResetState.clearAll()
+                    PasswordResetState.showLoginSuccessMessage = true
+                    navController.navigate(NailScanRoutes.Login) {
+                        popUpTo(NailScanRoutes.Login) { inclusive = true }
+                    }
                 },
             )
         }

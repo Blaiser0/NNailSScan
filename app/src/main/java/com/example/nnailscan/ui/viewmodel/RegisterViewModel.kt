@@ -3,6 +3,7 @@ package com.example.nnailscan.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nnailscan.firebase.AuthRepository
+import com.example.nnailscan.util.PasswordValidator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -74,6 +75,7 @@ class RegisterViewModel(
         password.isBlank() -> "Ingresa una contraseña."
         confirmPassword.isBlank() -> "Confirma tu contraseña."
         password != confirmPassword -> "Las contraseñas no coinciden."
+        PasswordValidator.validate(password) != null -> PasswordValidator.REQUIREMENTS_MESSAGE
         !termsAccepted -> "Debes aceptar los Términos y condiciones."
         else -> null
     }

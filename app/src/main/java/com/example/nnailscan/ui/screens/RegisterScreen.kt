@@ -39,6 +39,7 @@ import com.example.nnailscan.ui.components.NailScanTextField
 import com.example.nnailscan.ui.theme.NailScanBackground
 import com.example.nnailscan.ui.theme.NailScanLink
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
+import com.example.nnailscan.ui.theme.NailScanTextSecondary
 import com.example.nnailscan.ui.theme.Typography
 import com.example.nnailscan.ui.viewmodel.RegisterViewModel
 
@@ -100,6 +101,14 @@ fun RegisterScreen(
         )
 
         Spacer(modifier = Modifier.height(18.dp))
+
+        Text(
+            text = stringResource(R.string.password_requirements),
+            style = Typography.labelLarge.copy(color = NailScanTextSecondary),
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
 
         NailScanTextField(
             label = stringResource(R.string.register_password_label),

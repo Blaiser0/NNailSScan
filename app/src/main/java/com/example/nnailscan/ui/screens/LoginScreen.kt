@@ -33,6 +33,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nnailscan.R
+import com.example.nnailscan.navigation.PasswordResetState
 import com.example.nnailscan.ui.components.BrandHeaderSize
 import com.example.nnailscan.ui.components.NailScanBrandHeader
 import com.example.nnailscan.ui.components.NailScanPrimaryButton
@@ -63,6 +64,17 @@ fun LoginScreen(
         uiState.errorMessage?.let { message ->
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             viewModel.clearError()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        if (PasswordResetState.showLoginSuccessMessage) {
+            Toast.makeText(
+                context,
+                context.getString(R.string.change_password_success),
+                Toast.LENGTH_LONG,
+            ).show()
+            PasswordResetState.showLoginSuccessMessage = false
         }
     }
 
