@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.automirrored.outlined.MenuBook
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Science
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,8 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.nnailscan.ui.theme.NailScanAccent
 import com.example.nnailscan.ui.theme.NailScanBorder
 import com.example.nnailscan.ui.theme.NailScanButton
+import com.example.nnailscan.ui.theme.NailScanLogoCircle
 import com.example.nnailscan.ui.theme.NailScanSurface
 import com.example.nnailscan.ui.theme.NailScanTextPlaceholder
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
@@ -119,11 +123,16 @@ fun RecentActivityCard(
         }
         Box(
             modifier = Modifier
-                .size(52.dp)
-                .background(
-                    color = NailScanTextPlaceholder.copy(alpha = 0.35f),
-                    shape = RoundedCornerShape(10.dp),
-                ),
-        )
+                .size(44.dp)
+                .background(NailScanLogoCircle, CircleShape),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Science,
+                contentDescription = null,
+                modifier = Modifier.size(22.dp),
+                tint = NailScanAccent,
+            )
+        }
     }
 }

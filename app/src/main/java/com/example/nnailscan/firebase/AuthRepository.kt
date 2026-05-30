@@ -64,6 +64,31 @@ class AuthRepository(
             }
     }
 
+    suspend fun updateUserProfile(fullName: String): Result<Unit> = runCatching {
+        val user = currentUser ?: error("No hay sesión activa.")
+        val trimmedName = fullName.trim()
+        if (trimmedName.isBlank()) {
+            error("El nombre no puede estar vacío.")
+        }
+
+        user.updateProfile(
+            UserProfileChangeRequest.Builder()
+                .setDisplayName(trimmedName)
+                .build(),
+        ).await()
+
+        firestoreRepository.updateUserProfile(
+            UserProfile(
+                uid = user.uid,
+                fullName = trimmedName,
+                email = user.email.orEmpty(),
+            ),
+        ).getOrThrow()
+    }.fold(
+        onSuccess = { Result.success(Unit) },
+        onFailure = { Result.failure(Exception(mapAuthError(it))) },
+    )
+
     fun signOut() {
         auth.signOut()
     }

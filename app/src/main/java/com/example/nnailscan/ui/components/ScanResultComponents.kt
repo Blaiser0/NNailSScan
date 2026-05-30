@@ -109,7 +109,7 @@ fun ScanDiagnosisCard(
 @Composable
 fun ScanResultInfoCard(
     title: String,
-    lineCount: Int = 4,
+    body: String,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -131,7 +131,7 @@ fun ScanResultInfoCard(
                 ),
             )
             Spacer(modifier = Modifier.height(12.dp))
-            LoremPlaceholderBlock(lineCount = lineCount)
+            ContentTextBlock(text = body)
         }
     }
 }

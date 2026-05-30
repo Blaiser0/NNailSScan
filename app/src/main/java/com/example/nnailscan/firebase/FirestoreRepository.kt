@@ -4,6 +4,7 @@ import com.example.nnailscan.data.model.ScanRecord
 import com.example.nnailscan.data.model.UserProfile
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -21,6 +22,19 @@ class FirestoreRepository {
                     "email" to profile.email,
                     "createdAt" to Timestamp.now(),
                 ),
+            )
+            .await()
+    }
+
+    suspend fun updateUserProfile(profile: UserProfile): Result<Unit> = runCatching {
+        firestore.collection(FirebaseConfig.USERS_COLLECTION)
+            .document(profile.uid)
+            .set(
+                mapOf(
+                    "fullName" to profile.fullName,
+                    "email" to profile.email,
+                ),
+                SetOptions.merge(),
             )
             .await()
     }

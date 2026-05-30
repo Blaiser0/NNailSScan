@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.nnailscan.ui.theme.NailScanAccent
 import com.example.nnailscan.ui.theme.NailScanLogoCircle
 import com.example.nnailscan.ui.theme.NailScanSurface
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
@@ -60,7 +61,7 @@ fun ProfileMenuOptionCard(
                     imageVector = icon,
                     contentDescription = null,
                     modifier = Modifier.size(22.dp),
-                    tint = NailScanTextSecondary,
+                    tint = NailScanAccent,
                 )
             }
 

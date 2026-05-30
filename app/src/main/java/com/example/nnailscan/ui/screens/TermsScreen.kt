@@ -18,7 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.nnailscan.R
-import com.example.nnailscan.ui.components.LoremPlaceholderBlock
+import com.example.nnailscan.data.model.AppContent
+import com.example.nnailscan.ui.components.ContentTextBlock
 import com.example.nnailscan.ui.components.NailScanScreenHeader
 import com.example.nnailscan.ui.theme.NailScanBackground
 import com.example.nnailscan.ui.theme.NailScanSurface
@@ -51,7 +52,7 @@ fun TermsScreen(
                 .background(NailScanSurface, RoundedCornerShape(16.dp))
                 .padding(horizontal = 20.dp, vertical = 24.dp),
         ) {
-            LoremPlaceholderBlock(lineCount = 12)
+            ContentTextBlock(text = AppContent.termsAndConditions)
         }
 
         Spacer(modifier = Modifier.height(28.dp))
@@ -75,7 +76,7 @@ fun TermsScreen(
                     .background(NailScanSurface, RoundedCornerShape(16.dp))
                     .padding(horizontal = 20.dp, vertical = 24.dp),
             ) {
-                LoremPlaceholderBlock(lineCount = 11)
+                ContentTextBlock(text = AppContent.privacyPolicy)
             }
 
             Spacer(modifier = Modifier.height(24.dp))

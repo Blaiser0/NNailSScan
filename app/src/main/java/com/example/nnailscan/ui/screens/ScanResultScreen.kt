@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.nnailscan.R
+import com.example.nnailscan.data.model.DictionaryContent
 import com.example.nnailscan.navigation.ScanSessionState
 import com.example.nnailscan.ui.components.MedicalDisclaimerCard
 import com.example.nnailscan.ui.components.NailScanPrimaryButton
@@ -38,6 +39,9 @@ fun ScanResultScreen(
     }
 
     if (payload == null) return
+
+    val detail = DictionaryContent.detailById(payload.dictionaryTermId)
+        ?: DictionaryContent.detailByLabel(payload.rawLabel)
 
     LazyColumn(
         modifier = modifier
@@ -67,14 +71,16 @@ fun ScanResultScreen(
         item {
             ScanResultInfoCard(
                 title = stringResource(R.string.scan_result_description_title),
-                lineCount = 4,
+                body = detail?.scanDescription
+                    ?: stringResource(R.string.scan_result_default_description),
             )
         }
 
         item {
             ScanResultInfoCard(
                 title = stringResource(R.string.scan_result_recommendations_title),
-                lineCount = 4,
+                body = detail?.recommendations
+                    ?: stringResource(R.string.scan_result_default_recommendations),
             )
         }
 

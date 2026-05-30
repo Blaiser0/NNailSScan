@@ -7,11 +7,22 @@ import androidx.compose.runtime.Composable
 private val NailScanColorScheme = lightColorScheme(
     primary = NailScanButton,
     onPrimary = NailScanSurface,
+    primaryContainer = NailScanAccentLight,
+    onPrimaryContainer = NailScanPrimaryDark,
+    secondary = NailScanButtonSecondary,
+    onSecondary = NailScanSurface,
+    secondaryContainer = NailScanAccentLight,
+    onSecondaryContainer = NailScanPrimaryDark,
+    tertiary = NailScanPrimaryLight,
+    onTertiary = NailScanPrimaryDark,
     background = NailScanBackground,
     onBackground = NailScanTextPrimary,
     surface = NailScanSurface,
     onSurface = NailScanTextPrimary,
+    surfaceVariant = NailScanAccentLight,
+    onSurfaceVariant = NailScanTextSecondary,
     outline = NailScanBorder,
+    outlineVariant = NailScanBorder,
 )
 
 @Composable

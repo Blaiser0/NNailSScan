@@ -33,10 +33,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nnailscan.R
 import com.example.nnailscan.ui.components.RecentActivityCard
+import com.example.nnailscan.ui.theme.NailScanAccent
 import com.example.nnailscan.ui.theme.NailScanBackground
-import com.example.nnailscan.ui.theme.NailScanButton
 import com.example.nnailscan.ui.theme.NailScanLink
 import com.example.nnailscan.ui.theme.NailScanLogoCircle
+import com.example.nnailscan.ui.theme.NailScanScanButton
 import com.example.nnailscan.ui.theme.NailScanSurface
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
 import com.example.nnailscan.ui.theme.NailScanTextSecondary
@@ -77,7 +78,7 @@ fun HomeScreen(
                 Icon(
                     imageVector = Icons.Outlined.Person,
                     contentDescription = null,
-                    tint = NailScanTextSecondary,
+                    tint = NailScanAccent,
                     modifier = Modifier.size(26.dp),
                 )
             }
@@ -100,7 +101,7 @@ fun HomeScreen(
                 .size(132.dp)
                 .align(Alignment.CenterHorizontally)
                 .clip(CircleShape)
-                .background(NailScanButton)
+                .background(NailScanScanButton)
                 .clickable(onClick = onScanClick),
             contentAlignment = Alignment.Center,
         ) {

@@ -21,6 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.nnailscan.ui.theme.NailScanAccent
 import com.example.nnailscan.ui.theme.NailScanBorder
 import com.example.nnailscan.ui.theme.NailScanSurface
 import com.example.nnailscan.ui.theme.NailScanTextPlaceholder
@@ -39,6 +40,7 @@ fun NailScanTextField(
     passwordVisible: Boolean = false,
     onTogglePasswordVisibility: (() -> Unit)? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
+    enabled: Boolean = true,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
@@ -51,6 +53,7 @@ fun NailScanTextField(
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier.fillMaxWidth(),
+            enabled = enabled,
             placeholder = {
                 Text(
                     text = placeholder,
@@ -87,7 +90,7 @@ fun NailScanTextField(
                 focusedContainerColor = NailScanSurface,
                 unfocusedContainerColor = NailScanSurface,
                 disabledContainerColor = NailScanSurface,
-                focusedBorderColor = NailScanBorder,
+                focusedBorderColor = NailScanAccent,
                 unfocusedBorderColor = NailScanBorder,
                 cursorColor = NailScanTextPrimary,
                 focusedTextColor = NailScanTextPrimary,

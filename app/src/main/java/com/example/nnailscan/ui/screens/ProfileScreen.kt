@@ -40,6 +40,7 @@ import com.example.nnailscan.R
 import com.example.nnailscan.navigation.ProfileDestination
 import com.example.nnailscan.ui.components.NailScanPrimaryButton
 import com.example.nnailscan.ui.components.ProfileMenuOptionCard
+import com.example.nnailscan.ui.theme.NailScanAccent
 import com.example.nnailscan.ui.theme.NailScanBackground
 import com.example.nnailscan.ui.theme.NailScanButton
 import com.example.nnailscan.ui.theme.NailScanLogoCircle
@@ -83,7 +84,7 @@ fun ProfileScreen(
                         imageVector = Icons.Outlined.Person,
                         contentDescription = null,
                         modifier = Modifier.size(28.dp),
-                        tint = NailScanTextSecondary,
+                        tint = NailScanAccent,
                     )
                 }
 
@@ -106,7 +107,7 @@ fun ProfileScreen(
                 }
 
                 Button(
-                    onClick = { /* TODO: editar perfil */ },
+                    onClick = { onNavigate(ProfileDestination.EditProfile) },
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = NailScanButton,

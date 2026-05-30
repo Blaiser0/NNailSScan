@@ -137,7 +137,7 @@ fun RegisterScreen(
         NailScanLegalCheckbox(
             checked = termsAccepted,
             onCheckedChange = { termsAccepted = it },
-            modifier = Modifier.clickable(onClick = onNavigateToTerms),
+            onTermsClick = onNavigateToTerms,
         )
 
         Spacer(modifier = Modifier.height(24.dp))

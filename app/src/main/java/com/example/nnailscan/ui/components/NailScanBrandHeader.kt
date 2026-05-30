@@ -12,12 +12,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.nnailscan.R
-import com.example.nnailscan.ui.theme.NailScanTextPrimary
+import com.example.nnailscan.ui.theme.NailScanAccent
+import com.example.nnailscan.ui.theme.NailScanPrimaryDark
+import com.example.nnailscan.ui.theme.NailScanTextSecondary
 import com.example.nnailscan.ui.theme.Typography
 
 enum class BrandHeaderSize {
@@ -42,7 +47,7 @@ fun NailScanBrandHeader(
     }
 
     logoSize = when (size) {
-        BrandHeaderSize.Large -> 132.dp
+        BrandHeaderSize.Large -> 140.dp
         BrandHeaderSize.Compact -> 96.dp
     }
 
@@ -56,17 +61,24 @@ fun NailScanBrandHeader(
             modifier = Modifier.size(logoSize),
             contentScale = ContentScale.Fit,
         )
-        Spacer(modifier = Modifier.height(if (size == BrandHeaderSize.Large) 20.dp else 14.dp))
+        Spacer(modifier = Modifier.height(if (size == BrandHeaderSize.Large) 16.dp else 12.dp))
         Text(
-            text = stringResource(R.string.app_name),
-            style = titleStyle.copy(color = NailScanTextPrimary, fontWeight = FontWeight.Bold),
+            text = buildAnnotatedString {
+                withStyle(SpanStyle(color = NailScanPrimaryDark, fontWeight = FontWeight.Bold)) {
+                    append("Nail")
+                }
+                withStyle(SpanStyle(color = NailScanAccent, fontWeight = FontWeight.Bold)) {
+                    append("Scan")
+                }
+            },
+            style = titleStyle,
             textAlign = TextAlign.Center,
         )
         if (showTagline) {
             Spacer(modifier = Modifier.height(if (size == BrandHeaderSize.Large) 10.dp else 8.dp))
             Text(
                 text = stringResource(R.string.app_tagline),
-                style = taglineStyle.copy(color = NailScanTextPrimary),
+                style = taglineStyle.copy(color = NailScanTextSecondary),
                 textAlign = TextAlign.Center,
             )
         }
