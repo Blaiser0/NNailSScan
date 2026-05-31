@@ -87,6 +87,7 @@
     <string name="edit_profile_save">Guardar cambios</string>
     <string name="edit_profile_success">Perfil actualizado correctamente.</string>
     <string name="edit_profile_email_hint">El correo no se puede cambiar desde la app.</string>
+    <string name="edit_profile_photo_hint">Toca la foto para cambiarla</string>
     <string name="support_contact_button">Contactar soporte</string>
     <string name="feedback_rate_button">Calificar en Google Play</string>
     <string name="feedback_suggest_button">Sugerir una afección</string>

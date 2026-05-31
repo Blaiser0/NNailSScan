@@ -1,11 +1,6 @@
 package com.example.nnailscan.ui.screens
 
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -49,7 +44,6 @@ import com.example.nnailscan.ui.theme.NailScanTextPrimary
 import com.example.nnailscan.ui.theme.NailScanTextSecondary
 import com.example.nnailscan.ui.theme.Typography
 import com.example.nnailscan.ui.viewmodel.ProfileViewModel
-import com.example.nnailscan.util.BitmapCompressor
 
 @Composable
 fun ProfileScreen(
@@ -63,31 +57,10 @@ fun ProfileScreen(
     val displayName = uiState.fullName.ifBlank { "Usuario" }
     val displayEmail = uiState.email.ifBlank { "—" }
 
-    val pickPhotoLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia(),
-    ) { uri: Uri? ->
-        uri ?: return@rememberLauncherForActivityResult
-        val bytes = context.contentResolver.openInputStream(uri)?.use { input ->
-            BitmapFactory.decodeStream(input)?.let(BitmapCompressor::toProfileJpeg)
-        }
-        if (bytes == null) {
-            Toast.makeText(context, R.string.error_image_load, Toast.LENGTH_LONG).show()
-            return@rememberLauncherForActivityResult
-        }
-        viewModel.uploadProfilePhoto(bytes)
-    }
-
     LaunchedEffect(uiState.errorMessage) {
         uiState.errorMessage?.let { message ->
             Toast.makeText(context, message, Toast.LENGTH_LONG).show()
             viewModel.clearError()
-        }
-    }
-
-    LaunchedEffect(uiState.photoUploadSuccess) {
-        if (uiState.photoUploadSuccess) {
-            Toast.makeText(context, R.string.profile_photo_updated, Toast.LENGTH_SHORT).show()
-            viewModel.clearPhotoUploadSuccess()
         }
     }
 
@@ -105,12 +78,9 @@ fun ProfileScreen(
             ) {
                 ProfileAvatar(
                     photoUrl = uiState.photoUrl,
-                    isUploading = uiState.isUploadingPhoto,
-                    onClick = {
-                        pickPhotoLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
-                        )
-                    },
+                    isUploading = false,
+                    enabled = false,
+                    onClick = {},
                 )
 
                 Row(
