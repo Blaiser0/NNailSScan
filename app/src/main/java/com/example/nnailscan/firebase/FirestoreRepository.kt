@@ -1,5 +1,8 @@
 package com.example.nnailscan.firebase
 
+import com.example.nnailscan.data.model.DictionaryContent
+import com.example.nnailscan.data.model.DictionaryTerm
+import com.example.nnailscan.data.model.DictionaryTermDetail
 import com.example.nnailscan.data.model.ScanRecord
 import com.example.nnailscan.data.model.UserProfile
 import com.google.firebase.Timestamp
@@ -27,15 +30,23 @@ class FirestoreRepository {
     }
 
     suspend fun updateUserProfile(profile: UserProfile): Result<Unit> = runCatching {
+        val data = mutableMapOf(
+            "fullName" to profile.fullName,
+            "email" to profile.email,
+        )
+        if (profile.photoUrl.isNotBlank()) {
+            data["photoUrl"] = profile.photoUrl
+        }
         firestore.collection(FirebaseConfig.USERS_COLLECTION)
             .document(profile.uid)
-            .set(
-                mapOf(
-                    "fullName" to profile.fullName,
-                    "email" to profile.email,
-                ),
-                SetOptions.merge(),
-            )
+            .set(data, SetOptions.merge())
+            .await()
+    }
+
+    suspend fun updateUserPhotoUrl(uid: String, photoUrl: String): Result<Unit> = runCatching {
+        firestore.collection(FirebaseConfig.USERS_COLLECTION)
+            .document(uid)
+            .set(mapOf("photoUrl" to photoUrl), SetOptions.merge())
             .await()
     }
 
@@ -51,15 +62,29 @@ class FirestoreRepository {
             uid = uid,
             fullName = snapshot.getString("fullName").orEmpty(),
             email = snapshot.getString("email").orEmpty(),
+            photoUrl = snapshot.getString("photoUrl").orEmpty(),
         )
     }
 
-    suspend fun saveScan(userId: String, result: String): Result<Unit> = runCatching {
+    suspend fun saveScan(
+        scanId: String,
+        userId: String,
+        result: String,
+        rawLabel: String,
+        confidence: Float,
+        imageUrl: String,
+        dictionaryTermId: String,
+    ): Result<Unit> = runCatching {
         firestore.collection(FirebaseConfig.SCANS_COLLECTION)
-            .add(
+            .document(scanId)
+            .set(
                 mapOf(
                     "userId" to userId,
                     "result" to result,
+                    "rawLabel" to rawLabel,
+                    "confidence" to confidence,
+                    "imageUrl" to imageUrl,
+                    "dictionaryTermId" to dictionaryTermId,
                     "createdAt" to Timestamp.now(),
                 ),
             )
@@ -88,6 +113,10 @@ class FirestoreRepository {
                         id = document.id,
                         userId = document.getString("userId").orEmpty(),
                         result = document.getString("result").orEmpty(),
+                        rawLabel = document.getString("rawLabel").orEmpty(),
+                        confidence = document.getDouble("confidence")?.toFloat() ?: 0f,
+                        imageUrl = document.getString("imageUrl").orEmpty(),
+                        dictionaryTermId = document.getString("dictionaryTermId").orEmpty(),
                         createdAt = document.getTimestamp("createdAt"),
                     )
                 }
@@ -96,4 +125,66 @@ class FirestoreRepository {
 
         awaitClose { registration.remove() }
     }
+
+    suspend fun dictionaryTermHasImage(termId: String): Result<Boolean> = runCatching {
+        val snapshot = firestore.collection(FirebaseConfig.DICTIONARY_TERMS_COLLECTION)
+            .document(termId)
+            .get()
+            .await()
+        snapshot.exists() && !snapshot.getString("imageUrl").isNullOrBlank()
+    }
+
+    suspend fun createDictionaryTerm(
+        term: DictionaryTerm,
+        imageUrl: String,
+    ): Result<Unit> = runCatching {
+        val detail = DictionaryContent.detailById(term.id)
+        val data = mutableMapOf(
+            "id" to term.id,
+            "title" to term.title,
+            "description" to term.description,
+            "imageUrl" to imageUrl,
+        )
+        detail?.let {
+            data["symptoms"] = it.symptoms
+            data["causes"] = it.causes
+            data["causesSectionTitle"] = it.causesSectionTitle
+            data["scanDescription"] = it.scanDescription
+            data["recommendations"] = it.recommendations
+        }
+        firestore.collection(FirebaseConfig.DICTIONARY_TERMS_COLLECTION)
+            .document(term.id)
+            .set(data)
+            .await()
+    }
+
+    fun observeDictionaryTerms(): Flow<Map<String, DictionaryTermDetail>> = callbackFlow {
+        val registration = firestore.collection(FirebaseConfig.DICTIONARY_TERMS_COLLECTION)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    trySend(emptyMap())
+                    return@addSnapshotListener
+                }
+
+                val terms = snapshot?.documents.orEmpty().associate { document ->
+                    document.id to document.toDictionaryTermDetail()
+                }
+                trySend(terms)
+            }
+
+        awaitClose { registration.remove() }
+    }
+
+    private fun com.google.firebase.firestore.DocumentSnapshot.toDictionaryTermDetail(): DictionaryTermDetail =
+        DictionaryTermDetail(
+            id = id,
+            title = getString("title").orEmpty(),
+            description = getString("description").orEmpty(),
+            symptoms = getString("symptoms").orEmpty(),
+            causes = getString("causes").orEmpty(),
+            causesSectionTitle = getString("causesSectionTitle").orEmpty(),
+            scanDescription = getString("scanDescription").orEmpty(),
+            recommendations = getString("recommendations").orEmpty(),
+            imageUrl = getString("imageUrl").orEmpty(),
+        )
 }

@@ -5,27 +5,34 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nnailscan.R
-import com.example.nnailscan.data.model.DictionaryContent
 import com.example.nnailscan.ui.components.MedicalDisclaimerCard
 import com.example.nnailscan.ui.components.NailScanScreenHeader
 import com.example.nnailscan.ui.components.TermConditionHeader
 import com.example.nnailscan.ui.components.TermDetailInfoCard
 import com.example.nnailscan.ui.theme.NailScanBackground
+import com.example.nnailscan.ui.viewmodel.DictionaryViewModel
 
 @Composable
 fun TermDetailScreen(
     termId: String,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: DictionaryViewModel = viewModel(),
 ) {
-    val detail = DictionaryContent.detailById(termId) ?: return
+    val detail by viewModel.detailUiState(termId).collectAsState()
+    val termDetail = detail ?: return
 
     LazyColumn(
         modifier = modifier
@@ -36,36 +43,37 @@ fun TermDetailScreen(
     ) {
         item {
             NailScanScreenHeader(
-                title = detail.title,
+                title = termDetail.title,
                 onBack = onBack,
             )
         }
 
         item {
             TermConditionHeader(
-                termId = detail.id,
-                title = detail.title,
+                termId = termDetail.id,
+                title = termDetail.title,
+                imageUrl = termDetail.imageUrl,
             )
         }
 
         item {
             TermDetailInfoCard(
                 title = stringResource(R.string.term_detail_description),
-                body = detail.description,
+                body = termDetail.description,
             )
         }
 
         item {
             TermDetailInfoCard(
                 title = stringResource(R.string.term_detail_symptoms),
-                body = detail.symptoms,
+                body = termDetail.symptoms,
             )
         }
 
         item {
             TermDetailInfoCard(
-                title = detail.causesSectionTitle,
-                body = detail.causes,
+                title = termDetail.causesSectionTitle,
+                body = termDetail.causes,
             )
         }
 

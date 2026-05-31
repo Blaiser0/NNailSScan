@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 
 data class HomeUiState(
     val userName: String = "Usuario",
+    val photoUrl: String = "",
     val recentScans: List<ScanRecord> = emptyList(),
     val isLoading: Boolean = true,
 )
@@ -24,16 +25,17 @@ class HomeViewModel(
     val uiState = _uiState.asStateFlow()
 
     init {
-        loadProfile()
+        refreshProfile()
         observeScans()
     }
 
-    private fun loadProfile() {
+    fun refreshProfile() {
         viewModelScope.launch {
             val profile = authRepository.getUserProfile()
             _uiState.update {
                 it.copy(
                     userName = profile?.fullName?.ifBlank { null } ?: "Usuario",
+                    photoUrl = profile?.photoUrl.orEmpty(),
                     isLoading = false,
                 )
             }

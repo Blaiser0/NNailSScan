@@ -4,6 +4,7 @@ data class DictionaryTerm(
     val id: String,
     val title: String,
     val description: String,
+    val imageUrl: String = "",
 )
 
 data class DictionaryTermDetail(
@@ -15,6 +16,7 @@ data class DictionaryTermDetail(
     val causesSectionTitle: String,
     val scanDescription: String,
     val recommendations: String,
+    val imageUrl: String = "",
 )
 
 object DictionaryContent {
@@ -193,4 +195,6 @@ object DictionaryContent {
 
     fun detailByLabel(rawLabel: String): DictionaryTermDetail? =
         details[rawLabel.lowercase()] ?: detailById(rawLabel)
+
+    fun assetImagePath(termId: String): String = "file:///android_asset/categories/$termId.png"
 }

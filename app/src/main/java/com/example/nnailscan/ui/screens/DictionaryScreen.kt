@@ -11,23 +11,29 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nnailscan.R
-import com.example.nnailscan.data.model.DictionaryContent
 import com.example.nnailscan.ui.components.DictionaryTermCard
 import com.example.nnailscan.ui.theme.NailScanBackground
 import com.example.nnailscan.ui.theme.NailScanSurface
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
 import com.example.nnailscan.ui.theme.Typography
+import com.example.nnailscan.ui.viewmodel.DictionaryViewModel
 
 @Composable
 fun DictionaryScreen(
     onTermClick: (String) -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: DictionaryViewModel = viewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -54,8 +60,8 @@ fun DictionaryScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             items(
-                items = DictionaryContent.terms,
-                key = { it.title },
+                items = uiState.terms,
+                key = { it.id },
             ) { term ->
                 DictionaryTermCard(
                     term = term,

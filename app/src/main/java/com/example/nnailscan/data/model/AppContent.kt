@@ -1,6 +1,13 @@
 package com.example.nnailscan.data.model
 
+data class AboutAppSection(
+    val title: String,
+    val body: String,
+)
+
 object AppContent {
+    const val APP_VERSION = "1.2.0"
+
     val termsAndConditions: String = """
         1. Aceptación de los términos
         Al registrarte y usar NailScan aceptas estos términos y condiciones. Si no estás de acuerdo, no utilices la aplicación.
@@ -78,6 +85,35 @@ object AppContent {
         Horario de respuesta: lunes a viernes, 9:00–18:00 (hora de España).
     """.trimIndent()
 
+    val aboutMission: String = """
+        NailScan es una aplicación móvil de salud ungueal que te ayuda a detectar posibles alteraciones en tus uñas mediante inteligencia artificial entrenada localmente en tu dispositivo.
+    """.trimIndent()
+
+    val aboutFeatures: String = """
+        • Análisis instantáneo con cámara o galería
+        • Modelo TFLite con 8 clases de condiciones ungueales
+        • Diccionario educativo con descripción, síntomas y causas
+        • Historial personal sincronizado con Firebase
+        • Cuenta segura con autenticación por correo
+    """.trimIndent()
+
+    val aboutCredits: String = """
+        Desarrollado por el equipo NNailSScan.
+        Proyecto Firebase: nailscan-65b49
+    """.trimIndent()
+
+    val aboutDisclaimer: String = """
+        NailScan no reemplaza la atención médica profesional. Ante cualquier lesión sospechosa, especialmente bandas oscuras o cambios rápidos, consulta a un dermatólogo de inmediato.
+    """.trimIndent()
+
+    val aboutSections: List<AboutAppSection> = listOf(
+        AboutAppSection(title = "Nuestra misión", body = aboutMission),
+        AboutAppSection(title = "Características principales", body = aboutFeatures),
+        AboutAppSection(title = "Versión", body = APP_VERSION),
+        AboutAppSection(title = "Créditos", body = aboutCredits),
+        AboutAppSection(title = "Aviso importante", body = aboutDisclaimer),
+    )
+
     val aboutApp: String = """
         NailScan es una aplicación móvil de salud ungueal desarrollada para ayudarte a detectar posibles alteraciones en tus uñas mediante inteligencia artificial.
 
@@ -89,7 +125,7 @@ object AppContent {
         • Cuenta segura con autenticación por correo
 
         Versión
-        1.0.0
+        $APP_VERSION
 
         Desarrollado por el equipo NNailSScan.
         Proyecto Firebase: nailscan-65b49

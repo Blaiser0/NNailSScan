@@ -11,10 +11,13 @@ import kotlinx.coroutines.launch
 data class ProfileUiState(
     val fullName: String = "",
     val email: String = "",
+    val photoUrl: String = "",
     val isLoading: Boolean = true,
     val isSaving: Boolean = false,
+    val isUploadingPhoto: Boolean = false,
     val errorMessage: String? = null,
     val saveSuccess: Boolean = false,
+    val photoUploadSuccess: Boolean = false,
 )
 
 class ProfileViewModel(
@@ -29,15 +32,38 @@ class ProfileViewModel(
 
     fun refresh() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null, saveSuccess = false) }
+            _uiState.update {
+                it.copy(isLoading = true, errorMessage = null, saveSuccess = false, photoUploadSuccess = false)
+            }
             val profile = authRepository.getUserProfile()
             _uiState.update {
                 it.copy(
                     fullName = profile?.fullName.orEmpty(),
                     email = profile?.email.orEmpty(),
+                    photoUrl = profile?.photoUrl.orEmpty(),
                     isLoading = false,
                 )
             }
+        }
+    }
+
+    fun uploadProfilePhoto(jpegBytes: ByteArray) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(isUploadingPhoto = true, errorMessage = null, photoUploadSuccess = false)
+            }
+            val result = authRepository.updateUserProfilePhoto(jpegBytes)
+            _uiState.update { it.copy(isUploadingPhoto = false) }
+            result.fold(
+                onSuccess = { photoUrl ->
+                    _uiState.update {
+                        it.copy(photoUrl = photoUrl, photoUploadSuccess = true)
+                    }
+                },
+                onFailure = { error ->
+                    _uiState.update { it.copy(errorMessage = error.message) }
+                },
+            )
         }
     }
 
@@ -77,5 +103,9 @@ class ProfileViewModel(
 
     fun clearSaveSuccess() {
         _uiState.update { it.copy(saveSuccess = false) }
+    }
+
+    fun clearPhotoUploadSuccess() {
+        _uiState.update { it.copy(photoUploadSuccess = false) }
     }
 }

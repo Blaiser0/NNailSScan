@@ -1,9 +1,13 @@
 package com.example.nnailscan.ui.screens
 
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,27 +15,24 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AssignmentTurnedIn
 import androidx.compose.material.icons.outlined.HeadsetMic
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -39,16 +40,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nnailscan.R
 import com.example.nnailscan.navigation.ProfileDestination
 import com.example.nnailscan.ui.components.NailScanPrimaryButton
+import com.example.nnailscan.ui.components.ProfileAvatar
 import com.example.nnailscan.ui.components.ProfileMenuOptionCard
-import com.example.nnailscan.ui.theme.NailScanAccent
 import com.example.nnailscan.ui.theme.NailScanBackground
 import com.example.nnailscan.ui.theme.NailScanButton
-import com.example.nnailscan.ui.theme.NailScanLogoCircle
 import com.example.nnailscan.ui.theme.NailScanSurface
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
 import com.example.nnailscan.ui.theme.NailScanTextSecondary
 import com.example.nnailscan.ui.theme.Typography
 import com.example.nnailscan.ui.viewmodel.ProfileViewModel
+import com.example.nnailscan.util.BitmapCompressor
 
 @Composable
 fun ProfileScreen(
@@ -57,9 +58,38 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     viewModel: ProfileViewModel = viewModel(),
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
     val displayName = uiState.fullName.ifBlank { "Usuario" }
     val displayEmail = uiState.email.ifBlank { "—" }
+
+    val pickPhotoLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+    ) { uri: Uri? ->
+        uri ?: return@rememberLauncherForActivityResult
+        val bytes = context.contentResolver.openInputStream(uri)?.use { input ->
+            BitmapFactory.decodeStream(input)?.let(BitmapCompressor::toProfileJpeg)
+        }
+        if (bytes == null) {
+            Toast.makeText(context, R.string.error_image_load, Toast.LENGTH_LONG).show()
+            return@rememberLauncherForActivityResult
+        }
+        viewModel.uploadProfilePhoto(bytes)
+    }
+
+    LaunchedEffect(uiState.errorMessage) {
+        uiState.errorMessage?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+            viewModel.clearError()
+        }
+    }
+
+    LaunchedEffect(uiState.photoUploadSuccess) {
+        if (uiState.photoUploadSuccess) {
+            Toast.makeText(context, R.string.profile_photo_updated, Toast.LENGTH_SHORT).show()
+            viewModel.clearPhotoUploadSuccess()
+        }
+    }
 
     LazyColumn(
         modifier = modifier
@@ -73,52 +103,50 @@ fun ProfileScreen(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
-                        .background(NailScanLogoCircle),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Person,
-                        contentDescription = null,
-                        modifier = Modifier.size(28.dp),
-                        tint = NailScanAccent,
-                    )
-                }
+                ProfileAvatar(
+                    photoUrl = uiState.photoUrl,
+                    isUploading = uiState.isUploadingPhoto,
+                    onClick = {
+                        pickPhotoLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly),
+                        )
+                    },
+                )
 
-                Column(
+                Row(
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 14.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(
-                        text = displayName,
-                        style = Typography.bodyLarge.copy(
-                            color = NailScanTextPrimary,
-                            fontWeight = FontWeight.Bold,
-                        ),
-                    )
-                    Text(
-                        text = displayEmail,
-                        style = Typography.labelLarge.copy(color = NailScanTextSecondary),
-                    )
-                }
+                    androidx.compose.foundation.layout.Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = displayName,
+                            style = Typography.bodyLarge.copy(
+                                color = NailScanTextPrimary,
+                                fontWeight = FontWeight.Bold,
+                            ),
+                        )
+                        Text(
+                            text = displayEmail,
+                            style = Typography.labelLarge.copy(color = NailScanTextSecondary),
+                        )
+                    }
 
-                Button(
-                    onClick = { onNavigate(ProfileDestination.EditProfile) },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = NailScanButton,
-                        contentColor = NailScanSurface,
-                    ),
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
-                ) {
-                    Text(
-                        text = stringResource(R.string.profile_edit),
-                        style = Typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-                    )
+                    Button(
+                        onClick = { onNavigate(ProfileDestination.EditProfile) },
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = NailScanButton,
+                            contentColor = NailScanSurface,
+                        ),
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
+                    ) {
+                        Text(
+                            text = stringResource(R.string.profile_edit),
+                            style = Typography.labelLarge.copy(fontWeight = FontWeight.Bold),
+                        )
+                    }
                 }
             }
         }

@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nnailscan.R
 import com.example.nnailscan.ui.components.NailScanScreenHeader
-import com.example.nnailscan.ui.components.RecentActivityCard
+import com.example.nnailscan.ui.components.ScanHistoryCard
 import com.example.nnailscan.ui.theme.NailScanBackground
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
 import com.example.nnailscan.ui.theme.NailScanTextSecondary
@@ -71,9 +71,10 @@ fun HistoryScreen(
         } else {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 uiState.scans.forEach { scan ->
-                    RecentActivityCard(
+                    ScanHistoryCard(
                         dateLabel = formatScanDate(scan.createdAt),
                         result = formatScanResult(scan.result),
+                        imageUrl = scan.imageUrl,
                     )
                 }
             }

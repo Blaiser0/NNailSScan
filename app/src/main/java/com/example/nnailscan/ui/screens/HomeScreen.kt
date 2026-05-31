@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CameraAlt
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,11 +31,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nnailscan.R
-import com.example.nnailscan.ui.components.RecentActivityCard
-import com.example.nnailscan.ui.theme.NailScanAccent
+import com.example.nnailscan.ui.components.ProfileAvatar
+import com.example.nnailscan.ui.components.ScanHistoryCard
 import com.example.nnailscan.ui.theme.NailScanBackground
 import com.example.nnailscan.ui.theme.NailScanLink
-import com.example.nnailscan.ui.theme.NailScanLogoCircle
 import com.example.nnailscan.ui.theme.NailScanScanButton
 import com.example.nnailscan.ui.theme.NailScanSurface
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
@@ -50,6 +48,7 @@ import com.example.nnailscan.util.formatScanResult
 fun HomeScreen(
     onScanClick: () -> Unit,
     onViewFullHistory: () -> Unit,
+    onNavigateToProfile: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(),
 ) {
@@ -65,23 +64,15 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(NailScanSurface)
+                .clickable(onClick = onNavigateToProfile)
                 .padding(horizontal = 20.dp, vertical = 18.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .background(NailScanLogoCircle),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Person,
-                    contentDescription = null,
-                    tint = NailScanAccent,
-                    modifier = Modifier.size(26.dp),
-                )
-            }
+            ProfileAvatar(
+                photoUrl = uiState.photoUrl,
+                onClick = onNavigateToProfile,
+                size = 48.dp,
+            )
             Column(modifier = Modifier.padding(start = 14.dp)) {
                 Text(
                     text = stringResource(R.string.home_greeting),
@@ -89,7 +80,10 @@ fun HomeScreen(
                 )
                 Text(
                     text = uiState.userName,
-                    style = Typography.bodyMedium.copy(color = NailScanTextPrimary),
+                    style = Typography.bodyMedium.copy(
+                        color = NailScanTextPrimary,
+                        fontWeight = FontWeight.Bold,
+                    ),
                 )
             }
         }
@@ -140,9 +134,10 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 uiState.recentScans.forEach { scan ->
-                    RecentActivityCard(
+                    ScanHistoryCard(
                         dateLabel = formatScanDate(scan.createdAt),
                         result = formatScanResult(scan.result),
+                        imageUrl = scan.imageUrl,
                     )
                 }
             }

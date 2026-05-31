@@ -11,8 +11,24 @@ service cloud.firestore {
       allow read: if request.auth != null && resource.data.userId == request.auth.uid;
       allow create: if request.auth != null
         && request.resource.data.userId == request.auth.uid
-        && request.resource.data.keys().hasAll(['userId', 'result', 'createdAt']);
+        && request.resource.data.keys().hasAll([
+          'userId',
+          'result',
+          'rawLabel',
+          'confidence',
+          'imageUrl',
+          'dictionaryTermId',
+          'createdAt'
+        ]);
       allow update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+
+    match /dictionary_terms/{termId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && !exists(/databases/$(database)/documents/dictionary_terms/$(termId))
+        && request.resource.data.keys().hasAll(['id', 'title', 'description', 'imageUrl']);
+      allow update, delete: if false;
     }
   }
 }

@@ -20,14 +20,15 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.nnailscan.R
-import com.example.nnailscan.ui.theme.NailScanAccent
 import com.example.nnailscan.ui.theme.NailScanPrimaryDark
+import com.example.nnailscan.ui.theme.NailScanPrimaryLight
 import com.example.nnailscan.ui.theme.NailScanTextSecondary
 import com.example.nnailscan.ui.theme.Typography
 
 enum class BrandHeaderSize {
     Large,
     Compact,
+    Auth,
 }
 
 @Composable
@@ -35,20 +36,24 @@ fun NailScanBrandHeader(
     modifier: Modifier = Modifier,
     size: BrandHeaderSize = BrandHeaderSize.Large,
     showTagline: Boolean = true,
+    showTitle: Boolean = true,
 ) {
     val logoSize: Dp
     val titleStyle = when (size) {
         BrandHeaderSize.Large -> Typography.displayMedium
         BrandHeaderSize.Compact -> Typography.titleLarge
+        BrandHeaderSize.Auth -> Typography.displayMedium
     }
     val taglineStyle = when (size) {
         BrandHeaderSize.Large -> Typography.bodyLarge
         BrandHeaderSize.Compact -> Typography.bodyMedium
+        BrandHeaderSize.Auth -> Typography.bodyMedium
     }
 
     logoSize = when (size) {
         BrandHeaderSize.Large -> 140.dp
         BrandHeaderSize.Compact -> 96.dp
+        BrandHeaderSize.Auth -> 333.dp // 75 % más grande que 190.dp
     }
 
     Column(
@@ -61,19 +66,29 @@ fun NailScanBrandHeader(
             modifier = Modifier.size(logoSize),
             contentScale = ContentScale.Fit,
         )
-        Spacer(modifier = Modifier.height(if (size == BrandHeaderSize.Large) 16.dp else 12.dp))
-        Text(
-            text = buildAnnotatedString {
-                withStyle(SpanStyle(color = NailScanPrimaryDark, fontWeight = FontWeight.Bold)) {
-                    append("Nail")
-                }
-                withStyle(SpanStyle(color = NailScanAccent, fontWeight = FontWeight.Bold)) {
-                    append("Scan")
-                }
-            },
-            style = titleStyle,
-            textAlign = TextAlign.Center,
-        )
+        if (showTitle) {
+            Spacer(
+                modifier = Modifier.height(
+                    when (size) {
+                        BrandHeaderSize.Large -> 16.dp
+                        BrandHeaderSize.Auth -> 14.dp
+                        BrandHeaderSize.Compact -> 12.dp
+                    },
+                ),
+            )
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(SpanStyle(color = NailScanPrimaryDark, fontWeight = FontWeight.Bold)) {
+                        append("Nail")
+                    }
+                    withStyle(SpanStyle(color = NailScanPrimaryLight, fontWeight = FontWeight.Bold)) {
+                        append("Scan")
+                    }
+                },
+                style = titleStyle,
+                textAlign = TextAlign.Center,
+            )
+        }
         if (showTagline) {
             Spacer(modifier = Modifier.height(if (size == BrandHeaderSize.Large) 10.dp else 8.dp))
             Text(

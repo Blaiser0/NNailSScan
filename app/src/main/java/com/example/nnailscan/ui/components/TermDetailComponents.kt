@@ -61,6 +61,7 @@ fun termIconForId(termId: String): ImageVector = when (termId) {
 fun TermConditionHeader(
     termId: String,
     title: String,
+    imageUrl: String = "",
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -71,18 +72,28 @@ fun TermConditionHeader(
             .padding(horizontal = 20.dp, vertical = 24.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(
-            modifier = Modifier
-                .size(56.dp)
-                .background(NailScanSurface, CircleShape),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                imageVector = termIconForId(termId),
-                contentDescription = null,
-                modifier = Modifier.size(30.dp),
-                tint = NailScanAccent,
+        if (imageUrl.isNotBlank()) {
+            CategoryImage(
+                imageUrl = imageUrl,
+                contentDescription = categoryImageDescription(title),
+                termId = termId,
+                size = 72.dp,
+                roundedCorners = 14.dp,
             )
+        } else {
+            Box(
+                modifier = Modifier
+                    .size(56.dp)
+                    .background(NailScanSurface, CircleShape),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = termIconForId(termId),
+                    contentDescription = null,
+                    modifier = Modifier.size(30.dp),
+                    tint = NailScanAccent,
+                )
+            }
         }
         Spacer(modifier = Modifier.width(16.dp))
         Text(

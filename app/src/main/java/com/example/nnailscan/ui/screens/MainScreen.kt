@@ -17,6 +17,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nnailscan.navigation.ProfileDestination
 import com.example.nnailscan.ui.components.MainTab
 import com.example.nnailscan.ui.components.NailScanBottomBar
+import com.example.nnailscan.ui.viewmodel.HomeViewModel
 import com.example.nnailscan.ui.viewmodel.ProfileViewModel
 import kotlinx.coroutines.flow.StateFlow
 
@@ -32,6 +33,7 @@ fun MainScreen(
     var selectedTermId by rememberSaveable { mutableStateOf<String?>(null) }
     var profileDestination by rememberSaveable { mutableStateOf(ProfileDestination.Main) }
     val profileViewModel: ProfileViewModel = viewModel()
+    val homeViewModel: HomeViewModel = viewModel()
 
     val pendingDictionaryTermId by pendingDictionaryTermIdFlow
         ?.collectAsState()
@@ -42,6 +44,12 @@ fun MainScreen(
             selectedTab = MainTab.Dictionary
             selectedTermId = termId
             onPendingDictionaryTermConsumed()
+        }
+    }
+
+    LaunchedEffect(selectedTab) {
+        if (selectedTab == MainTab.Home) {
+            homeViewModel.refreshProfile()
         }
     }
 
@@ -74,6 +82,11 @@ fun MainScreen(
                 modifier = Modifier.padding(padding),
                 onScanClick = onNavigateToScan,
                 onViewFullHistory = { showFullHistory = true },
+                onNavigateToProfile = {
+                    selectedTab = MainTab.Profile
+                    profileDestination = ProfileDestination.Main
+                },
+                viewModel = homeViewModel,
             )
 
             selectedTab == MainTab.Dictionary && selectedTermId != null -> TermDetailScreen(

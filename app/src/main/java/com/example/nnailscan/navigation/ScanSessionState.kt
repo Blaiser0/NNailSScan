@@ -10,6 +10,8 @@ object ScanSessionState {
         val confidence: Float,
         val dictionaryTermId: String,
         val scannedAtMillis: Long,
+        val scanId: String = "",
+        val imageUrl: String = "",
     )
 
     var current: Payload? = null

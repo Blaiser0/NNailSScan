@@ -10,6 +10,7 @@ import kotlinx.coroutines.tasks.await
 
 class AuthRepository(
     private val firestoreRepository: FirestoreRepository = FirestoreRepository(),
+    private val storageRepository: StorageRepository = StorageRepository(),
 ) {
     private val auth get() = FirebaseConfig.auth
 
@@ -54,15 +55,39 @@ class AuthRepository(
 
     suspend fun getUserProfile(): UserProfile? {
         val uid = currentUser?.uid ?: return null
-        return firestoreRepository.getUserProfile(uid).getOrNull()
-            ?: currentUser?.let { user ->
-                UserProfile(
-                    uid = user.uid,
-                    fullName = user.displayName.orEmpty().ifBlank { "Usuario" },
-                    email = user.email.orEmpty(),
-                )
-            }
+        val firestoreProfile = firestoreRepository.getUserProfile(uid).getOrNull()
+        val authPhotoUrl = currentUser?.photoUrl?.toString().orEmpty()
+        return firestoreProfile?.copy(
+            photoUrl = firestoreProfile.photoUrl.ifBlank { authPhotoUrl },
+        ) ?: currentUser?.let { user ->
+            UserProfile(
+                uid = user.uid,
+                fullName = user.displayName.orEmpty().ifBlank { "Usuario" },
+                email = user.email.orEmpty(),
+                photoUrl = user.photoUrl?.toString().orEmpty(),
+            )
+        }
     }
+
+    suspend fun updateUserProfilePhoto(jpegBytes: ByteArray): Result<String> = runCatching {
+        val user = currentUser ?: error("No hay sesión activa.")
+        val photoUrl = storageRepository
+            .uploadProfileImage(user.uid, jpegBytes)
+            .getOrThrow()
+
+        firestoreRepository.updateUserPhotoUrl(user.uid, photoUrl).getOrThrow()
+
+        user.updateProfile(
+            UserProfileChangeRequest.Builder()
+                .setPhotoUri(android.net.Uri.parse(photoUrl))
+                .build(),
+        ).await()
+
+        photoUrl
+    }.fold(
+        onSuccess = { Result.success(it) },
+        onFailure = { Result.failure(Exception(mapAuthError(it))) },
+    )
 
     suspend fun updateUserProfile(fullName: String): Result<Unit> = runCatching {
         val user = currentUser ?: error("No hay sesión activa.")
@@ -82,6 +107,7 @@ class AuthRepository(
                 uid = user.uid,
                 fullName = trimmedName,
                 email = user.email.orEmpty(),
+                photoUrl = getUserProfile()?.photoUrl.orEmpty(),
             ),
         ).getOrThrow()
     }.fold(

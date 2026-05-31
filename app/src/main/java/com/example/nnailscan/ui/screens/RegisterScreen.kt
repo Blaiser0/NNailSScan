@@ -32,6 +32,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nnailscan.R
+import com.example.nnailscan.ui.components.NailScanAuthBrandingDefaults
+import com.example.nnailscan.ui.components.NailScanAuthBrandingSection
 import com.example.nnailscan.ui.components.NailScanLegalCheckbox
 import com.example.nnailscan.ui.components.NailScanPrimaryButton
 import com.example.nnailscan.ui.components.NailScanScreenHeader
@@ -74,14 +76,20 @@ fun RegisterScreen(
             .fillMaxSize()
             .background(NailScanBackground)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 24.dp, vertical = 32.dp),
+            .padding(
+                horizontal = NailScanAuthBrandingDefaults.screenHorizontalPadding,
+                vertical = NailScanAuthBrandingDefaults.screenVerticalPadding,
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         NailScanScreenHeader(
             title = stringResource(R.string.register_title),
             onBack = onBack,
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(NailScanAuthBrandingDefaults.headerToBrandingSpacing))
+
+        NailScanAuthBrandingSection()
 
         NailScanTextField(
             label = stringResource(R.string.register_full_name_label),
