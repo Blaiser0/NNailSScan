@@ -41,7 +41,7 @@ import com.example.nnailscan.ui.theme.NailScanDisclaimerBackground
 import com.example.nnailscan.ui.theme.NailScanDisclaimerBorder
 import com.example.nnailscan.ui.theme.NailScanDisclaimerIcon
 import com.example.nnailscan.ui.theme.NailScanLogoCircle
-import com.example.nnailscan.ui.theme.NailScanPrimaryDark
+import com.example.nnailscan.ui.theme.NailScanTextPrimary
 import com.example.nnailscan.ui.theme.NailScanSurface
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
 import com.example.nnailscan.ui.theme.Typography
@@ -99,7 +99,7 @@ fun TermConditionHeader(
         Text(
             text = title,
             style = Typography.titleMedium.copy(
-                color = NailScanPrimaryDark,
+                color = NailScanTextPrimary,
                 fontWeight = FontWeight.Bold,
             ),
             modifier = Modifier.weight(1f),

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="nailscan_background">#FFFFF8F0</color>
-    <color name="nailscan_primary_dark">#FF8B5E3C</color>
-    <color name="nailscan_primary_light">#FFF5D1B3</color>
+    <color name="nailscan_background">#FF061B3A</color>
+    <color name="nailscan_primary_dark">#FF061B3A</color>
+    <color name="nailscan_primary_light">#FF0F2E56</color>
     <color name="nailscan_accent">#FFD4A373</color>
-    <color name="nailscan_accent_dark">#FFA0714F</color>
-    <color name="nailscan_accent_light">#FFF5D1B3</color>
-    <color name="nailscan_border">#FFE8C4A8</color>
+    <color name="nailscan_accent_dark">#FFC58E6D</color>
+    <color name="nailscan_accent_light">#FF1A3558</color>
+    <color name="nailscan_border">#FF183A5C</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

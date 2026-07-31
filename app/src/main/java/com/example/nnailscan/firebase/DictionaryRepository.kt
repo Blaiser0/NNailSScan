@@ -48,6 +48,6 @@ class DictionaryRepository(
         )
     }
 
-    private fun resolveImageUrl(termId: String, remoteUrl: String?): String =
-        remoteUrl?.takeIf { it.isNotBlank() } ?: DictionaryContent.assetImagePath(termId)
+    private fun resolveImageUrl(termId: String, @Suppress("UNUSED_PARAMETER") remoteUrl: String?): String =
+        DictionaryContent.assetImagePath(termId)
 }

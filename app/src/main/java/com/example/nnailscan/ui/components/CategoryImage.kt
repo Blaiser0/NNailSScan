@@ -15,17 +15,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.example.nnailscan.R
 import com.example.nnailscan.data.model.DictionaryContent
 import com.example.nnailscan.ui.theme.NailScanAccent
 import com.example.nnailscan.ui.theme.NailScanLogoCircle
 import com.example.nnailscan.ui.theme.NailScanSurface
+import com.example.nnailscan.util.rememberNailScanImageRequest
 
 fun categoryImageContainerColor(termId: String?): Color =
     when (termId) {
@@ -56,10 +55,12 @@ fun CategoryImage(
     circular: Boolean = false,
     contentScale: ContentScale = categoryImageContentScale(termId),
 ) {
-    val context = LocalContext.current
     val shape = if (circular) CircleShape else RoundedCornerShape(roundedCorners)
-
     val containerColor = categoryImageContainerColor(termId)
+    val request = rememberNailScanImageRequest(
+        data = imageUrl.takeIf { it.isNotBlank() },
+        size = size,
+    )
 
     Box(
         modifier = modifier
@@ -70,10 +71,7 @@ fun CategoryImage(
     ) {
         if (imageUrl.isNotBlank()) {
             AsyncImage(
-                model = ImageRequest.Builder(context)
-                    .data(imageUrl)
-                    .crossfade(true)
-                    .build(),
+                model = request,
                 contentDescription = contentDescription,
                 modifier = Modifier
                     .fillMaxSize()

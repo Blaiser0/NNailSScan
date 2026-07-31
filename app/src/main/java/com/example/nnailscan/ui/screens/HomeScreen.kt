@@ -38,6 +38,7 @@ import com.example.nnailscan.ui.components.ScanClassificationChart
 import com.example.nnailscan.ui.components.ScanHistoryCard
 import com.example.nnailscan.ui.theme.NailScanBackground
 import com.example.nnailscan.ui.theme.NailScanLink
+import com.example.nnailscan.ui.theme.NailScanOnAccent
 import com.example.nnailscan.ui.theme.NailScanScanButton
 import com.example.nnailscan.ui.theme.NailScanSurface
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
@@ -115,7 +116,7 @@ fun HomeScreen(
                 imageVector = Icons.Outlined.CameraAlt,
                 contentDescription = stringResource(R.string.home_scan_button_description),
                 modifier = Modifier.size(52.dp),
-                tint = NailScanSurface,
+                tint = NailScanOnAccent,
             )
         }
 

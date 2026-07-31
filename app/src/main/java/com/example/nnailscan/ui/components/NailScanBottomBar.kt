@@ -24,8 +24,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.example.nnailscan.ui.theme.NailScanAccent
 import com.example.nnailscan.ui.theme.NailScanBorder
-import com.example.nnailscan.ui.theme.NailScanButton
 import com.example.nnailscan.ui.theme.NailScanSurface
 import com.example.nnailscan.ui.theme.NailScanTextPlaceholder
 
@@ -91,7 +91,7 @@ private fun BottomBarItem(
             imageVector = icon,
             contentDescription = null,
             modifier = Modifier.size(24.dp),
-            tint = if (selected) NailScanButton else NailScanTextPlaceholder,
+            tint = if (selected) NailScanAccent else NailScanTextPlaceholder,
         )
     }
 }

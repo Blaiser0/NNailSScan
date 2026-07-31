@@ -35,7 +35,7 @@ import com.example.nnailscan.ui.components.NailScanAuthBrandingDefaults
 import com.example.nnailscan.ui.components.NailScanAuthBrandingSection
 import com.example.nnailscan.ui.components.NailScanScreenHeader
 import com.example.nnailscan.ui.theme.NailScanBackground
-import com.example.nnailscan.ui.theme.NailScanPrimaryDark
+import com.example.nnailscan.ui.theme.NailScanTextPrimary
 import com.example.nnailscan.ui.theme.NailScanSurface
 import com.example.nnailscan.ui.theme.Typography
 import com.example.nnailscan.ui.viewmodel.RoleViewModel
@@ -158,7 +158,7 @@ internal fun AboutInfoCard(
         Text(
             text = title,
             style = Typography.titleMedium.copy(
-                color = NailScanPrimaryDark,
+                color = NailScanTextPrimary,
                 fontWeight = FontWeight.Bold,
             ),
             modifier = Modifier.fillMaxWidth(),

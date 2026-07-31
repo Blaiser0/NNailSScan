@@ -1,25 +1,25 @@
 package com.example.nnailscan.ui.theme
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 
-private val NailScanColorScheme = lightColorScheme(
+private val NailScanColorScheme = darkColorScheme(
     primary = NailScanButton,
-    onPrimary = NailScanSurface,
-    primaryContainer = NailScanAccentLight,
-    onPrimaryContainer = NailScanPrimaryDark,
+    onPrimary = NailScanOnAccent,
+    primaryContainer = NailScanCopperDeep,
+    onPrimaryContainer = NailScanTextPrimary,
     secondary = NailScanButtonSecondary,
-    onSecondary = NailScanSurface,
-    secondaryContainer = NailScanAccentLight,
-    onSecondaryContainer = NailScanPrimaryDark,
-    tertiary = NailScanPrimaryLight,
-    onTertiary = NailScanPrimaryDark,
+    onSecondary = NailScanOnAccent,
+    secondaryContainer = NailScanNavyLight,
+    onSecondaryContainer = NailScanTextPrimary,
+    tertiary = NailScanAccent,
+    onTertiary = NailScanOnAccent,
     background = NailScanBackground,
     onBackground = NailScanTextPrimary,
     surface = NailScanSurface,
     onSurface = NailScanTextPrimary,
-    surfaceVariant = NailScanAccentLight,
+    surfaceVariant = NailScanPrimaryLight,
     onSurfaceVariant = NailScanTextSecondary,
     outline = NailScanBorder,
     outlineVariant = NailScanBorder,

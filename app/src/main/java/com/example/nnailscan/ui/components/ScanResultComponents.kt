@@ -36,6 +36,7 @@ import com.example.nnailscan.ui.theme.NailScanDiagnosisBorder
 import com.example.nnailscan.ui.theme.NailScanSurface
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
 import com.example.nnailscan.ui.theme.Typography
+import com.example.nnailscan.util.rememberNailScanImageRequest
 
 @Composable
 fun ScanAnalyzedImageContainer(
@@ -66,8 +67,12 @@ fun ScanAnalyzedImageContainer(
             }
 
             !imageUrl.isNullOrBlank() -> {
+                val request = rememberNailScanImageRequest(
+                    data = imageUrl,
+                    size = 220.dp,
+                )
                 AsyncImage(
-                    model = imageUrl,
+                    model = request,
                     contentDescription = stringResource(R.string.image_preview_description),
                     modifier = Modifier
                         .fillMaxWidth()

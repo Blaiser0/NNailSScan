@@ -19,7 +19,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.nnailscan.ui.theme.NailScanButton
 import com.example.nnailscan.ui.theme.NailScanLink
-import com.example.nnailscan.ui.theme.NailScanSurface
+import com.example.nnailscan.ui.theme.NailScanOnAccent
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
 import com.example.nnailscan.ui.theme.Typography
 
@@ -40,7 +40,7 @@ fun NailScanLegalCheckbox(
             colors = CheckboxDefaults.colors(
                 checkedColor = NailScanButton,
                 uncheckedColor = NailScanTextPrimary,
-                checkmarkColor = NailScanSurface,
+                checkmarkColor = NailScanOnAccent,
             ),
         )
         Spacer(modifier = Modifier.width(4.dp))

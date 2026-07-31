@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -36,6 +35,7 @@ import com.example.nnailscan.ui.theme.NailScanSurface
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
 import com.example.nnailscan.ui.theme.NailScanTextSecondary
 import com.example.nnailscan.ui.theme.Typography
+import com.example.nnailscan.util.rememberNailScanImageRequest
 
 @Composable
 fun ScanHistoryCard(
@@ -95,6 +95,11 @@ fun ScanThumbnail(
     modifier: Modifier = Modifier,
 ) {
     val shape = RoundedCornerShape(12.dp)
+    val thumbnailSize = 64.dp
+    val request = rememberNailScanImageRequest(
+        data = imageUrl,
+        size = thumbnailSize,
+    )
 
     Box(
         modifier = modifier
@@ -112,12 +117,10 @@ fun ScanThumbnail(
             )
         } else {
             AsyncImage(
-                model = imageUrl,
+                model = request,
                 contentDescription = stringResource(R.string.scan_thumbnail_description),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.nailscan_logo),
-                error = painterResource(R.drawable.nailscan_logo),
             )
         }
     }

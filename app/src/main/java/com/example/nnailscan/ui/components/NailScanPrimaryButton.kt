@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.nnailscan.ui.theme.NailScanButton
 import com.example.nnailscan.ui.theme.NailScanButtonDisabled
-import com.example.nnailscan.ui.theme.NailScanSurface
+import com.example.nnailscan.ui.theme.NailScanOnAccent
 import com.example.nnailscan.ui.theme.Typography
 
 @Composable
@@ -31,9 +31,9 @@ fun NailScanPrimaryButton(
         shape = RoundedCornerShape(14.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = NailScanButton,
-            contentColor = NailScanSurface,
+            contentColor = NailScanOnAccent,
             disabledContainerColor = NailScanButtonDisabled,
-            disabledContentColor = NailScanSurface,
+            disabledContentColor = NailScanOnAccent,
         ),
     ) {
         Text(

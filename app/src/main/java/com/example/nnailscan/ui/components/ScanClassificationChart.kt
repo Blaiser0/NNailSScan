@@ -1,5 +1,6 @@
 package com.example.nnailscan.ui.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,10 +35,9 @@ import androidx.compose.ui.unit.dp
 import com.example.nnailscan.R
 import com.example.nnailscan.ui.theme.NailScanAccent
 import com.example.nnailscan.ui.theme.NailScanAccentDark
+import com.example.nnailscan.ui.theme.NailScanBorder
 import com.example.nnailscan.ui.theme.NailScanButton
 import com.example.nnailscan.ui.theme.NailScanDisclaimerBackground
-import com.example.nnailscan.ui.theme.NailScanPrimaryDark
-import com.example.nnailscan.ui.theme.NailScanPrimaryLight
 import com.example.nnailscan.ui.theme.NailScanSurface
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
 import com.example.nnailscan.ui.theme.NailScanTextSecondary
@@ -45,16 +45,18 @@ import com.example.nnailscan.ui.theme.Typography
 import com.example.nnailscan.ui.viewmodel.ClassificationStat
 import kotlin.math.roundToInt
 
-/** Paleta derivada de NailScan — tonos distinguibles dentro de cobre/bronce. */
+/** Colores vivos + borde oscuro: contrastan con el fondo navy de la app. */
+private val chartSegmentBorder = Color(0xFF010A18)
+
 private val nailScanChartPalette = listOf(
-    NailScanPrimaryDark,
-    NailScanAccentDark,
-    Color(0xFF6B4528),
-    NailScanAccent,
-    Color(0xFF9C7355),
-    Color(0xFF5A3820),
-    Color(0xFFB8895A),
-    Color(0xFFC4A484),
+    Color(0xFFD4A373), // cobre (marca)
+    Color(0xFF7EC8E3), // celeste
+    Color(0xFF98D8AA), // menta
+    Color(0xFFF4A896), // coral
+    Color(0xFFE8B86D), // dorado
+    Color(0xFFC9A0DC), // lavanda
+    Color(0xFF2EC4B6), // turquesa
+    Color(0xFFFFB347), // naranja
 )
 
 private fun chartColor(index: Int): Color = nailScanChartPalette[index % nailScanChartPalette.size]
@@ -70,6 +72,7 @@ fun ScanClassificationChart(
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(NailScanSurface)
+            .border(1.dp, NailScanAccent.copy(alpha = 0.45f), RoundedCornerShape(16.dp))
             .padding(16.dp),
     ) {
         Box(
@@ -77,6 +80,7 @@ fun ScanClassificationChart(
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
                 .background(NailScanDisclaimerBackground)
+                .border(1.dp, NailScanBorder, RoundedCornerShape(12.dp))
                 .padding(horizontal = 14.dp, vertical = 12.dp),
         ) {
             Column {
@@ -174,20 +178,44 @@ private fun DonutChart(
                 (size.height - diameter) / 2f,
             )
             val arcSize = Size(diameter, diameter)
-            val gapDegrees = if (stats.size > 1) 3f else 0f
+            val gapDegrees = if (stats.size > 1) 4f else 0f
             var startAngle = -90f
+
+            // Pista de fondo de la dona
+            drawArc(
+                color = NailScanBorder,
+                startAngle = 0f,
+                sweepAngle = 360f,
+                useCenter = false,
+                topLeft = topLeft,
+                size = arcSize,
+                style = Stroke(width = strokeWidth, cap = StrokeCap.Butt),
+            )
 
             stats.forEachIndexed { index, stat ->
                 val sweep = (stat.count.toFloat() / total) * 360f
                 val drawSweep = (sweep - gapDegrees).coerceAtLeast(0.5f)
+                val segmentStart = startAngle + gapDegrees / 2f
+                val borderStyle = Stroke(width = strokeWidth + 2.5f, cap = StrokeCap.Butt)
+                val fillStyle = Stroke(width = strokeWidth, cap = StrokeCap.Butt)
+
                 drawArc(
-                    color = chartColor(index),
-                    startAngle = startAngle + gapDegrees / 2f,
+                    color = chartSegmentBorder,
+                    startAngle = segmentStart,
                     sweepAngle = drawSweep,
                     useCenter = false,
                     topLeft = topLeft,
                     size = arcSize,
-                    style = Stroke(width = strokeWidth, cap = StrokeCap.Butt),
+                    style = borderStyle,
+                )
+                drawArc(
+                    color = chartColor(index),
+                    startAngle = segmentStart,
+                    sweepAngle = drawSweep,
+                    useCenter = false,
+                    topLeft = topLeft,
+                    size = arcSize,
+                    style = fillStyle,
                 )
                 startAngle += sweep
             }
@@ -225,7 +253,8 @@ private fun LegendChip(
             modifier = Modifier
                 .size(10.dp)
                 .clip(CircleShape)
-                .background(color),
+                .background(color)
+                .border(1.dp, chartSegmentBorder, CircleShape),
         )
         Text(
             text = label,
@@ -286,14 +315,15 @@ private fun StatBarRow(
                 .fillMaxWidth()
                 .height(18.dp)
                 .clip(RoundedCornerShape(9.dp))
-                .background(NailScanPrimaryLight.copy(alpha = 0.45f)),
+                .background(NailScanBorder),
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth(barFraction.coerceIn(0f, 1f))
                     .clip(RoundedCornerShape(9.dp))
-                    .background(color),
+                    .background(color)
+                    .border(1.dp, chartSegmentBorder, RoundedCornerShape(9.dp)),
             )
         }
     }

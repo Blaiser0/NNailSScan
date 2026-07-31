@@ -40,7 +40,7 @@ import com.example.nnailscan.ui.components.ProfileAvatar
 import com.example.nnailscan.ui.components.ProfileMenuOptionCard
 import com.example.nnailscan.ui.theme.NailScanBackground
 import com.example.nnailscan.ui.theme.NailScanButton
-import com.example.nnailscan.ui.theme.NailScanSurface
+import com.example.nnailscan.ui.theme.NailScanOnAccent
 import com.example.nnailscan.ui.theme.NailScanTextPrimary
 import com.example.nnailscan.ui.theme.NailScanTextSecondary
 import com.example.nnailscan.ui.theme.Typography
@@ -115,7 +115,7 @@ fun ProfileScreen(
                         shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = NailScanButton,
-                            contentColor = NailScanSurface,
+                            contentColor = NailScanOnAccent,
                         ),
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
                     ) {

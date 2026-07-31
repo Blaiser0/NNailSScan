@@ -22,6 +22,7 @@ import com.example.nnailscan.R
 import com.example.nnailscan.ui.theme.NailScanAccent
 import com.example.nnailscan.ui.theme.NailScanBackground
 import com.example.nnailscan.ui.theme.NailScanLogoCircle
+import com.example.nnailscan.util.rememberNailScanImageRequest
 
 @Composable
 fun ProfileAvatar(
@@ -41,8 +42,12 @@ fun ProfileAvatar(
         contentAlignment = Alignment.Center,
     ) {
         if (!photoUrl.isNullOrBlank()) {
+            val request = rememberNailScanImageRequest(
+                data = photoUrl,
+                size = size,
+            )
             AsyncImage(
-                model = photoUrl,
+                model = request,
                 contentDescription = stringResource(R.string.profile_photo_description),
                 modifier = Modifier
                     .size(size)

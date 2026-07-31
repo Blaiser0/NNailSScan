@@ -1,9 +1,12 @@
 package com.example.nnailscan.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
@@ -26,8 +29,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.nnailscan.R
-import com.example.nnailscan.ui.theme.NailScanPrimaryDark
-import com.example.nnailscan.ui.theme.NailScanPrimaryLight
+import com.example.nnailscan.ui.theme.NailScanAccent
+import com.example.nnailscan.ui.theme.NailScanBackground
+import com.example.nnailscan.ui.theme.NailScanTextPrimary
 import com.example.nnailscan.ui.theme.NailScanTextSecondary
 import com.example.nnailscan.ui.theme.Typography
 
@@ -70,11 +74,10 @@ fun NailScanBrandHeader(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Image(
-            painter = painterResource(R.drawable.nailscan_logo),
-            contentDescription = stringResource(R.string.app_name),
+        Box(
             modifier = Modifier
                 .size(logoSize)
+                .background(NailScanBackground)
                 .then(
                     if (onLogoTripleClick != null) {
                         Modifier.clickable {
@@ -91,8 +94,15 @@ fun NailScanBrandHeader(
                         Modifier
                     },
                 ),
-            contentScale = ContentScale.Fit,
-        )
+            contentAlignment = Alignment.Center,
+        ) {
+            Image(
+                painter = painterResource(R.drawable.nailscan_logo),
+                contentDescription = stringResource(R.string.app_name),
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit,
+            )
+        }
         if (showTitle) {
             Spacer(
                 modifier = Modifier.height(
@@ -105,10 +115,10 @@ fun NailScanBrandHeader(
             )
             Text(
                 text = buildAnnotatedString {
-                    withStyle(SpanStyle(color = NailScanPrimaryDark, fontWeight = FontWeight.Bold)) {
+                    withStyle(SpanStyle(color = NailScanTextPrimary, fontWeight = FontWeight.Bold)) {
                         append("Nail")
                     }
-                    withStyle(SpanStyle(color = NailScanPrimaryLight, fontWeight = FontWeight.Bold)) {
+                    withStyle(SpanStyle(color = NailScanAccent, fontWeight = FontWeight.Bold)) {
                         append("Scan")
                     }
                 },
