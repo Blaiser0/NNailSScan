@@ -5,4 +5,5 @@ data class UserProfile(
     val fullName: String = "",
     val email: String = "",
     val photoUrl: String = "",
+    val role: UserRole = UserRole.USER,
 )

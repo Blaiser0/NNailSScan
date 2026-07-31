@@ -58,13 +58,17 @@ fun ScanResultScreen(
         }
 
         item {
-            ScanAnalyzedImageContainer(bitmap = payload.bitmap)
+            ScanAnalyzedImageContainer(
+                bitmap = payload.bitmap,
+                imageUrl = payload.imageUrl,
+            )
         }
 
         item {
             ScanDiagnosisCard(
                 dateLabel = formatResultDate(payload.scannedAtMillis),
                 detectedDisease = payload.formattedLabel,
+                confidence = payload.confidence,
             )
         }
 

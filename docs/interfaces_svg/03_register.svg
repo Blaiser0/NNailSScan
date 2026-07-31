@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 800" preserveAspectRatio="xMidYMid meet" overflow="hidden" role="img" aria-label="RegisterScreen" width="100%" height="100%" style="display:block;width:100%;height:100%;max-width:100%;max-height:100%;">
+<defs>
+<clipPath id="clip-registerscreen"><rect x="0" y="0" width="360" height="800"/></clipPath>
+</defs>
+<style>
+svg { display: block; width: 100%; height: 100%; max-width: 100%; max-height: 100%; }
+.t { font-family: Arial, Helvetica, sans-serif; fill: #8B5E3C; }
+.ts { font-family: Arial, Helvetica, sans-serif; fill: #9C7355; }
+.tp { font-family: Arial, Helvetica, sans-serif; fill: #C4A484; }
+.tw { font-family: Arial, Helvetica, sans-serif; fill: #FFFFFF; }
+.tl { font-family: Arial, Helvetica, sans-serif; fill: #A0714F; }
+</style>
+<g id="screen" clip-path="url(#clip-registerscreen)">
+<rect x="0" y="0" width="100%" height="100%" fill="#FFF8F0"/>
+<rect x="0" y="0" width="360" height="56" rx="0" fill="#FFFFFF"/>
+<text x="20" y="36" class="t" font-size="22" font-weight="bold" text-anchor="start">←</text>
+<text x="48" y="36" class="t" font-size="22" font-weight="bold" text-anchor="start">Registro</text>
+<circle cx="180" cy="105" r="35" fill="#F5D1B3" stroke="#E8C4A8" stroke-width="1"/>
+<text x="180" y="168" text-anchor="middle" class="t" font-size="28" font-weight="bold"><tspan fill="#8B5E3C">Nail</tspan><tspan fill="#F5D1B3">Scan</tspan></text>
+<text x="24" y="180" class="t" font-size="16" font-weight="bold" text-anchor="start">Nombre Completo</text>
+<rect x="24" y="190" width="312" height="52" rx="10" fill="#FFFFFF" stroke="#E8C4A8" stroke-width="1"/>
+<text x="40" y="222" class="tp" font-size="16" font-weight="normal" text-anchor="start">Tu nombre completo</text>
+<text x="24" y="258" class="t" font-size="16" font-weight="bold" text-anchor="start">Correo Electronico</text>
+<rect x="24" y="268" width="312" height="52" rx="10" fill="#FFFFFF" stroke="#E8C4A8" stroke-width="1"/>
+<text x="40" y="300" class="tp" font-size="16" font-weight="normal" text-anchor="start">tu@correo.com</text>
+<text x="24" y="336" class="t" font-size="16" font-weight="bold" text-anchor="start">Contrasena</text>
+<rect x="24" y="346" width="312" height="52" rx="10" fill="#FFFFFF" stroke="#E8C4A8" stroke-width="1"/>
+<text x="40" y="378" class="tp" font-size="16" font-weight="normal" text-anchor="start">********</text>
+<text x="24" y="414" class="t" font-size="16" font-weight="bold" text-anchor="start">Confirmar Contrasena</text>
+<rect x="24" y="424" width="312" height="52" rx="10" fill="#FFFFFF" stroke="#E8C4A8" stroke-width="1"/>
+<text x="40" y="456" class="tp" font-size="16" font-weight="normal" text-anchor="start">********</text>
+<text x="24" y="502" class="ts" font-size="13" font-weight="normal" text-anchor="start">Acepto los terminos y condiciones</text>
+<rect x="24" y="516" width="312" height="52" rx="14" fill="#8B5E3C"/>
+<text x="180" y="548" class="tw" font-size="15" font-weight="bold" text-anchor="middle">Registrarse</text>
+</g></svg>

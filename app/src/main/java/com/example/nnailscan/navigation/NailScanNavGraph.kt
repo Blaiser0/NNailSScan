@@ -3,9 +3,11 @@ package com.example.nnailscan.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.nnailscan.firebase.FirebaseConfig
 import com.example.nnailscan.ui.screens.ChangePasswordScreen
 import com.example.nnailscan.ui.screens.CheckEmailScreen
@@ -16,6 +18,7 @@ import com.example.nnailscan.ui.screens.MainScreen
 import com.example.nnailscan.ui.screens.RegisterScreen
 import com.example.nnailscan.ui.screens.ScanResultScreen
 import com.example.nnailscan.ui.screens.ScanScreen
+import com.example.nnailscan.ui.screens.TermDetailScreen
 import com.example.nnailscan.ui.screens.TermsScreen
 import com.example.nnailscan.ui.screens.WelcomeScreen
 
@@ -27,10 +30,13 @@ object NailScanRoutes {
     const val Main = "main"
     const val Scan = "scan"
     const val ScanResult = "scan_result"
+    const val TermDetail = "term_detail/{termId}"
     const val ForgotPassword = "forgot_password"
     const val CheckEmail = "check_email"
     const val EmailVerified = "email_verified"
     const val ChangePassword = "change_password"
+
+    fun termDetail(termId: String): String = "term_detail/$termId"
 }
 
 @Composable
@@ -159,17 +165,15 @@ fun NailScanNavHost(
             )
         }
 
-        composable(NailScanRoutes.Main) { backStackEntry ->
-            val pendingDictionaryTermId = backStackEntry.savedStateHandle
-                .getStateFlow<String?>("dictionaryTermId", null)
-
+        composable(NailScanRoutes.Main) {
             MainScreen(
-                pendingDictionaryTermIdFlow = pendingDictionaryTermId,
-                onPendingDictionaryTermConsumed = {
-                    backStackEntry.savedStateHandle.remove<String>("dictionaryTermId")
-                },
                 onNavigateToScan = {
                     navController.navigate(NailScanRoutes.Scan)
+                },
+                onNavigateToScanResult = {
+                    navController.navigate(NailScanRoutes.ScanResult) {
+                        launchSingleTop = true
+                    }
                 },
                 onLogout = {
                     navController.navigate(NailScanRoutes.Login) {
@@ -183,7 +187,9 @@ fun NailScanNavHost(
             ScanScreen(
                 onBack = { navController.popBackStack() },
                 onNavigateToResult = {
-                    navController.navigate(NailScanRoutes.ScanResult)
+                    navController.navigate(NailScanRoutes.ScanResult) {
+                        launchSingleTop = true
+                    }
                 },
             )
         }
@@ -192,14 +198,29 @@ fun NailScanNavHost(
             ScanResultScreen(
                 onBack = {
                     ScanSessionState.clear()
-                    navController.popBackStack(NailScanRoutes.Main, false)
+                    if (!navController.popBackStack()) {
+                        navController.navigate(NailScanRoutes.Main) {
+                            popUpTo(NailScanRoutes.Main) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
                 },
                 onLearnMore = { dictionaryTermId ->
-                    navController.getBackStackEntry(NailScanRoutes.Main)
-                        .savedStateHandle["dictionaryTermId"] = dictionaryTermId
-                    ScanSessionState.clear()
-                    navController.popBackStack(NailScanRoutes.Main, false)
+                    navController.navigate(NailScanRoutes.termDetail(dictionaryTermId))
                 },
+            )
+        }
+
+        composable(
+            route = NailScanRoutes.TermDetail,
+            arguments = listOf(
+                navArgument("termId") { type = NavType.StringType },
+            ),
+        ) { backStackEntry ->
+            val termId = backStackEntry.arguments?.getString("termId") ?: return@composable
+            TermDetailScreen(
+                termId = termId,
+                onBack = { navController.popBackStack() },
             )
         }
     }

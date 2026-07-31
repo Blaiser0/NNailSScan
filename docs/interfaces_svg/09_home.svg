@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 800" preserveAspectRatio="xMidYMid meet" overflow="hidden" role="img" aria-label="HomeScreen" width="100%" height="100%" style="display:block;width:100%;height:100%;max-width:100%;max-height:100%;">
+<defs>
+<clipPath id="clip-homescreen"><rect x="0" y="0" width="360" height="800"/></clipPath>
+</defs>
+<style>
+svg { display: block; width: 100%; height: 100%; max-width: 100%; max-height: 100%; }
+.t { font-family: Arial, Helvetica, sans-serif; fill: #8B5E3C; }
+.ts { font-family: Arial, Helvetica, sans-serif; fill: #9C7355; }
+.tp { font-family: Arial, Helvetica, sans-serif; fill: #C4A484; }
+.tw { font-family: Arial, Helvetica, sans-serif; fill: #FFFFFF; }
+.tl { font-family: Arial, Helvetica, sans-serif; fill: #A0714F; }
+</style>
+<g id="screen" clip-path="url(#clip-homescreen)">
+<rect x="0" y="0" width="100%" height="100%" fill="#FFF8F0"/>
+<rect x="0" y="0" width="360" height="84" rx="0" fill="#FFFFFF"/>
+<circle cx="44" cy="42" r="24" fill="#F5D1B3"/>
+<text x="78" y="34" class="t" font-size="14" font-weight="normal" text-anchor="start">Hola,</text>
+<text x="78" y="54" class="t" font-size="16" font-weight="bold" text-anchor="start">Maria Lopez</text>
+<circle cx="180" cy="200" r="66" fill="#D4A373"/>
+<path d="M162 200 h36 M180 182 v36" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+<rect x="188" y="188" width="14" height="10" rx="2" fill="none" stroke="#FFFFFF" stroke-width="3"/>
+<text x="24" y="290" class="t" font-size="18" font-weight="bold" text-anchor="start">Actividad Reciente</text>
+<rect x="20" y="306" width="320" height="88" rx="14" fill="#FFFFFF"/>
+<rect x="34" y="320" width="60" height="60" rx="12" fill="#F5D1B3"/>
+<text x="106" y="344" class="t" font-size="16" font-weight="bold" text-anchor="start">Unas sanas</text>
+<text x="106" y="364" class="ts" font-size="13" font-weight="normal" text-anchor="start">15/06/2026 10:30</text>
+<rect x="20" y="406" width="320" height="88" rx="14" fill="#FFFFFF"/>
+<rect x="34" y="420" width="60" height="60" rx="12" fill="#F5D1B3"/>
+<text x="106" y="444" class="t" font-size="16" font-weight="bold" text-anchor="start">Onicomicosis</text>
+<text x="106" y="464" class="ts" font-size="13" font-weight="normal" text-anchor="start">14/06/2026 18:45</text>
+<text x="180" y="520" class="tl" font-size="14" font-weight="bold" text-anchor="middle">Ver historial completo</text>
+<rect x="0" y="736" width="360" height="64" rx="0" fill="#FFFFFF" stroke="#E8C4A8" stroke-width="1"/>
+<circle cx="60" cy="758" r="10" fill="#8B5E3C"/>
+<text x="60" y="784" class="t" font-size="10" font-weight="normal" text-anchor="middle">Inicio</text>
+<circle cx="180" cy="758" r="10" fill="#C4A484"/>
+<text x="180" y="784" class="tp" font-size="10" font-weight="normal" text-anchor="middle">Diccionario</text>
+<circle cx="300" cy="758" r="10" fill="#C4A484"/>
+<text x="300" y="784" class="tp" font-size="10" font-weight="normal" text-anchor="middle">Perfil</text>
+</g></svg>

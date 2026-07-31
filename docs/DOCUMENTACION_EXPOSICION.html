@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Exposición NailScan — 3 archivos clave</title>
+  <style>
+    :root {
+      --bg: #FFF8F0;
+      --surface: #FFFFFF;
+      --primary: #8B5E3C;
+      --accent: #D4A373;
+      --light: #F5D1B3;
+      --border: #E8C4A8;
+      --secondary: #9C7355;
+      --text: #3d2a1a;
+      --code-bg: #1e1e1e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", Arial, sans-serif;
+      line-height: 1.55;
+    }
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff;
+      padding: 36px 24px;
+      text-align: center;
+    }
+    header h1 { margin: 0 0 6px; font-size: 1.9rem; }
+    header p { margin: 0; opacity: 0.95; font-size: 1.05rem; }
+    main { max-width: 960px; margin: 0 auto; padding: 32px 20px 64px; }
+
+    .slide {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 40px;
+      box-shadow: 0 6px 24px rgba(139, 94, 60, 0.1);
+      page-break-inside: avoid;
+    }
+    .slide-num {
+      display: inline-block;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .slide h2 {
+      color: var(--primary);
+      margin: 0 0 6px;
+      font-size: 1.6rem;
+    }
+    .path {
+      font-family: Consolas, monospace;
+      font-size: 0.82rem;
+      color: var(--secondary);
+      margin-bottom: 16px;
+      word-break: break-all;
+    }
+    .role {
+      display: inline-block;
+      background: var(--light);
+      color: var(--primary);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 16px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .summary {
+      font-size: 1.05rem;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+    .highlight-box {
+      border: 2px solid var(--accent);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+    .highlight-box .label {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 8px 14px;
+    }
+    pre {
+      margin: 0;
+      background: var(--code-bg);
+      color: #f8f8f2;
+      padding: 18px;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      font-family: Consolas, "Courier New", monospace;
+    }
+    .line-ref {
+      color: #888;
+      user-select: none;
+      margin-right: 12px;
+    }
+    .kw { color: #c586c0; }
+    .fn { color: #dcdcaa; }
+    .str { color: #ce9178; }
+    .cm { color: #6a9955; }
+    .num { color: #b5cea8; }
+    .type { color: #4ec9b0; }
+    .hl { background: rgba(212, 163, 115, 0.25); display: block; margin: 0 -18px; padding: 0 18px; }
+
+    .say {
+      background: #fff3e8;
+      border-left: 4px solid var(--accent);
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin-top: 20px;
+    }
+    .say strong { color: var(--primary); }
+    .bullets {
+      margin: 16px 0 0;
+      padding-left: 20px;
+    }
+    .bullets li { margin-bottom: 6px; }
+    .bullets strong { color: var(--primary); }
+
+    .flow-mini {
+      background: #faf6f0;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-family: Consolas, monospace;
+      font-size: 0.85rem;
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--secondary);
+      font-size: 0.9rem;
+    }
+
+    @media print {
+      body { background: #fff; }
+      .slide { box-shadow: none; break-after: page; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>NailScan — Guía de Exposición</h1>
+  <p>3 archivos · 3 diapositivas · código clave para mostrar</p>
+</header>
+
+<main>
+
+<!-- SLIDE 1 -->
+<section class="slide">
+  <span class="slide-num">DIAPOSITIVA 1 / 3</span>
+  <h2>entrenar_modelo.py <span class="role">Entrenamiento IA</span></h2>
+  <p class="path">modelo nuevo/entrenar_modelo.py</p>
+
+  <p class="summary">
+    Script de Python que <strong>entrena el modelo de IA</strong> con fotos de uñas
+    y lo exporta como <code>.tflite</code> para que la app Android lo use sin internet.
+  </p>
+
+  <ul class="bullets">
+    <li><strong>EfficientNetB1</strong> — red preentrenada en ImageNet, adaptada a enfermedades de uñas.</li>
+    <li><strong>240×240 px</strong> — tamaño de entrada del modelo (coincide con NailClassifier).</li>
+    <li><strong>3 fases</strong> — primero entrena la cabeza, luego ajusta capas del modelo base.</li>
+    <li><strong>Salida</strong> — genera <code>nail_model_nuevo.tflite</code> y lo copia a <code>app/src/main/assets/</code>.</li>
+  </ul>
+
+  <div class="highlight-box">
+    <div class="label">⭐ Código más importante para la diapositiva — construir el modelo + exportar a Android</div>
+    <pre><span class="cm"># 1. Arquitectura: EfficientNetB1 + cabeza personalizada</span>
+<span class="fn">def</span> <span class="fn">build_model</span>(num_classes):
+    base = EfficientNetB1(
+        input_shape=(<span class="num">240</span>, <span class="num">240</span>, <span class="num">3</span>),
+        include_top=<span class="kw">False</span>,
+        weights=<span class="str">"imagenet"</span>,   <span class="cm"># transfer learning</span>
+    )
+    base.trainable = <span class="kw">False</span>
+    x = base(inputs, training=<span class="kw">False</span>)
+    x = layers.GlobalAveragePooling2D()(x)
+    x = layers.Dense(<span class="num">512</span>, activation=<span class="str">"relu"</span>)(x)
+    outputs = layers.Dense(num_classes, activation=<span class="str">"softmax"</span>)(x)
+    <span class="kw">return</span> model, base
+
+<span class="cm"># 2. Exportar el .tflite que usa la app</span>
+<span class="fn">def</span> <span class="fn">export_tflite</span>():
+    converter = tf.lite.TFLiteConverter.from_keras_model(final_model)
+    converter.optimizations = [tf.lite.Optimize.DEFAULT]
+    tflite_bytes = converter.convert()
+    <span class="cm"># Copia automática a assets de Android:</span>
+    destination = PROJECT / <span class="str">"app/src/main/assets/nail_model_nuevo.tflite"</span>
+    destination.write_bytes(tflite_bytes)</pre>
+  </div>
+
+  <div class="say">
+    <strong>Qué decir en la exposición:</strong><br>
+    “Este script toma las imágenes del dataset organizadas por carpetas — una carpeta por enfermedad —
+    entrena EfficientNetB1 en 3 fases y al final genera el archivo <code>nail_model_nuevo.tflite</code>
+    que la app carga en el celular. Sin este paso, NailClassifier no tendría un cerebro.”
+  </div>
+</section>
+
+<!-- SLIDE 2 -->
+<section class="slide">
+  <span class="slide-num">DIAPOSITIVA 2 / 3</span>
+  <h2>NailClassifier.kt <span class="role">IA en el celular</span></h2>
+  <p class="path">app/src/main/java/com/example/nnailscan/NailClassifier.kt</p>
+
+  <p class="summary">
+    Clase Kotlin que <strong>ejecuta el modelo .tflite en el dispositivo</strong>.
+    Recibe la foto del usuario y devuelve la enfermedad detectada con su porcentaje de confianza.
+  </p>
+
+  <ul class="bullets">
+    <li><strong>On-device</strong> — no necesita internet para analizar.</li>
+    <li><strong>TensorFlow Lite</strong> — motor que corre el modelo en Android.</li>
+    <li><strong>Entrada</strong> — foto redimensionada a 240×240 y convertida a números RGB.</li>
+    <li><strong>Salida</strong> — nombre de la clase + confianza (ej. <code>"onicomicosis", 87.3f</code>).</li>
+  </ul>
+
+  <div class="highlight-box">
+    <div class="label">⭐ Código más importante para la diapositiva — función classifyImage()</div>
+    <pre><span class="fn">fun</span> <span class="fn">classifyImage</span>(bitmap: Bitmap): Pair&lt;String, Float&gt; {
+    <span class="cm">// 1. Redimensionar la foto al tamaño que espera el modelo</span>
+    <span class="hl">    val resized = Bitmap.createScaledBitmap(bitmap, inputWidth, inputHeight, true)</span>
+    <span class="hl">    val inputBuffer = bitmapToByteBuffer(resized)</span>
+    <span class="hl">    val output = Array(1) { FloatArray(numClasses) }</span>
+
+    <span class="cm">// 2. Ejecutar la predicción con TensorFlow Lite</span>
+    <span class="hl">    interpreter.run(inputBuffer, output)</span>
+
+    <span class="cm">// 3. Elegir la clase con mayor probabilidad</span>
+    <span class="hl">    val probabilities = output[0]</span>
+    <span class="hl">    var bestIndex = 0</span>
+    <span class="hl">    var bestProbability = probabilities[0]</span>
+    <span class="hl">    for (i in 1 until numClasses) {</span>
+    <span class="hl">        if (probabilities[i] > bestProbability) {</span>
+    <span class="hl">            bestProbability = probabilities[i]</span>
+    <span class="hl">            bestIndex = i</span>
+    <span class="hl">        }</span>
+    <span class="hl">    }</span>
+
+    <span class="cm">// 4. Devolver etiqueta legible + confianza en %</span>
+    <span class="hl">    return labels[bestIndex] to (bestProbability * 100f)</span>
+}</pre>
+  </div>
+
+  <div class="say">
+    <strong>Qué decir en la exposición:</strong><br>
+    “Cuando el usuario elige una foto, esta función la prepara, la pasa al modelo TFLite
+    y devuelve el diagnóstico. Todo ocurre en el celular en menos de un segundo —
+    la misma lógica que entrenamos en Python, pero empaquetada para Android.”
+  </div>
+</section>
+
+<!-- SLIDE 3 -->
+<section class="slide">
+  <span class="slide-num">DIAPOSITIVA 3 / 3</span>
+  <h2>AuthRepository.kt <span class="role">Autenticación Firebase</span></h2>
+  <p class="path">app/src/main/java/com/example/nnailscan/firebase/AuthRepository.kt</p>
+
+  <p class="summary">
+    Capa que conecta la app con <strong>Firebase Authentication</strong>.
+    Gestiona login, registro y la sesión activa del usuario.
+  </p>
+
+  <ul class="bullets">
+    <li><strong>currentUser</strong> — indica quién está logueado en este momento.</li>
+    <li><strong>signIn()</strong> — valida correo y contraseña contra Firebase.</li>
+    <li><strong>signUp()</strong> — crea la cuenta y guarda el perfil en Firestore.</li>
+    <li><strong>Protege el escaneo</strong> — sin sesión activa no se puede guardar el historial.</li>
+  </ul>
+
+  <div class="highlight-box">
+    <div class="label">⭐ Código más importante para la diapositiva — sesión + registro con perfil</div>
+    <pre><span class="cm">// Usuario activo — lo consulta ScanScreen antes de analizar</span>
+<span class="hl">val currentUser: FirebaseUser?</span>
+    <span class="hl">get() = auth.currentUser</span>
+
+<span class="cm">// Iniciar sesión</span>
+<span class="fn">suspend fun</span> <span class="fn">signIn</span>(email: String, password: String): Result&lt;Unit&gt; =
+    auth.signInWithEmailAndPassword(email.trim(), password).await()
+
+<span class="cm">// Crear cuenta + guardar perfil en Firestore</span>
+<span class="fn">suspend fun</span> <span class="fn">signUp</span>(email: String, password: String, fullName: String): Result&lt;Unit&gt; {
+    <span class="hl">val result = auth.createUserWithEmailAndPassword(trimmedEmail, password).await()</span>
+    <span class="hl">val user = result.user ?: error("No se pudo crear la cuenta.")</span>
+
+    <span class="hl">user.updateProfile(</span>
+    <span class="hl">    UserProfileChangeRequest.Builder().setDisplayName(trimmedName).build()</span>
+    <span class="hl">).await()</span>
+
+    <span class="hl">firestoreRepository.saveUserProfile(</span>
+    <span class="hl">    UserProfile(uid = user.uid, fullName = trimmedName,</span>
+    <span class="hl">              email = trimmedEmail, role = UserRole.USER)</span>
+    <span class="hl">    ).getOrThrow()</span>
+}</pre>
+  </div>
+
+  <div class="say">
+    <strong>Qué decir en la exposición:</strong><br>
+    “Este repositorio es el portero de la app: verifica quién entra y mantiene la sesión.
+    Al registrarse, no solo crea la cuenta en Firebase Auth sino que también guarda el perfil
+    en Firestore. Cada escaneo queda vinculado al <code>uid</code> del usuario logueado.”
+  </div>
+</section>
+
+<div class="flow-mini">
+  entrenar_modelo.py &nbsp;→&nbsp; genera .tflite &nbsp;→&nbsp; NailClassifier.kt analiza la foto &nbsp;→&nbsp; AuthRepository.kt valida quién escaneó
+</div>
+
+</main>
+
+<footer>
+  NailScan · 3 diapositivas · Abre en Chrome, Edge o Firefox · Ctrl+P para imprimir o exportar PDF
+</footer>
+
+</body>
+</html>

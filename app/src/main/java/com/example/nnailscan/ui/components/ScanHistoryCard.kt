@@ -2,6 +2,7 @@ package com.example.nnailscan.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,11 +42,15 @@ fun ScanHistoryCard(
     dateLabel: String,
     result: String,
     imageUrl: String?,
+    onClick: () -> Unit,
+    userName: String? = null,
     modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(14.dp))
+            .clickable(onClick = onClick)
             .background(NailScanSurface, RoundedCornerShape(14.dp))
             .padding(horizontal = 14.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -65,6 +70,16 @@ fun ScanHistoryCard(
                     fontWeight = FontWeight.SemiBold,
                 ),
             )
+            if (!userName.isNullOrBlank()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = stringResource(R.string.scan_history_user_label, userName),
+                    style = Typography.labelLarge.copy(
+                        color = NailScanAccent,
+                        fontWeight = FontWeight.Medium,
+                    ),
+                )
+            }
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = dateLabel,
@@ -115,11 +130,13 @@ fun RecentActivityCard(
     result: String,
     modifier: Modifier = Modifier,
     imageUrl: String? = null,
+    onClick: () -> Unit = {},
 ) {
     ScanHistoryCard(
         dateLabel = dateLabel,
         result = result,
         imageUrl = imageUrl,
+        onClick = onClick,
         modifier = modifier,
     )
 }

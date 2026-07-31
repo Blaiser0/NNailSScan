@@ -8,31 +8,61 @@ data class AboutAppSection(
 object AppContent {
     const val APP_VERSION = "1.2.0"
 
-    val termsAndConditions: String = """
-        1. Aceptación de los términos
-        Al registrarte y usar NailScan aceptas estos términos y condiciones. Si no estás de acuerdo, no utilices la aplicación.
+    val termsSections: List<AboutAppSection> = listOf(
+        AboutAppSection(
+            title = "1. Aceptación de los términos",
+            body = """
+                Al crear tu cuenta y usar la app, aceptas estos términos. Si no estás de acuerdo, te pedimos que no utilices NailScan.
+            """.trimIndent(),
+        ),
+        AboutAppSection(
+            title = "2. Naturaleza del servicio",
+            body = """
+                NailScan te ayuda a revisar tus uñas a partir de una foto. Los resultados son orientativos y no reemplazan una consulta con un dermatólogo u otro profesional de salud.
+            """.trimIndent(),
+        ),
+        AboutAppSection(
+            title = "3. Uso responsable",
+            body = """
+                Usa información real al registrarte, sube fotos tuyas o con permiso de la persona, y no utilices NailScan para engañar a otros ni para tomar decisiones médicas sin asesoramiento profesional.
+            """.trimIndent(),
+        ),
+        AboutAppSection(
+            title = "4. Cuenta de usuario",
+            body = """
+                Cuida tu contraseña y de lo que se haga desde tu cuenta. Puedes cerrar sesión cuando quieras desde la sección Perfil.
+            """.trimIndent(),
+        ),
+        AboutAppSection(
+            title = "5. Historial de escaneos",
+            body = """
+                Guardamos tus escaneos en tu cuenta para que puedas consultarlos. Te recomendamos guardar capturas importantes por si las necesitas más adelante.
+            """.trimIndent(),
+        ),
+        AboutAppSection(
+            title = "6. Limitación de responsabilidad",
+            body = """
+                NailScan no se hace responsable de decisiones de salud basadas solo en los resultados de la app. Si tienes dudas o síntomas que persisten, consulta a un profesional.
+            """.trimIndent(),
+        ),
+        AboutAppSection(
+            title = "7. Modificaciones",
+            body = """
+                Podemos actualizar estos términos. Si sigues usando la app después de un cambio, se entiende que aceptas la versión actualizada.
+            """.trimIndent(),
+        ),
+        AboutAppSection(
+            title = "8. Contacto",
+            body = """
+                Si tienes preguntas sobre estos términos, escríbenos a:
+                Correo: 22221039@unamad.edu.pe
+            """.trimIndent(),
+        ),
+    )
 
-        2. Naturaleza del servicio
-        NailScan es una herramienta de apoyo basada en inteligencia artificial que analiza imágenes de uñas para identificar posibles patrones asociados a condiciones ungueales. No constituye un diagnóstico médico ni sustituye la consulta con un dermatólogo o médico calificado.
-
-        3. Uso responsable
-        Debes proporcionar información veraz al registrarte, usar imágenes propias o con autorización, y no utilizar la app con fines fraudulentos o para tomar decisiones médicas sin supervisión profesional.
-
-        4. Cuenta de usuario
-        Eres responsable de mantener la confidencialidad de tu contraseña y de toda actividad realizada desde tu cuenta. Puedes cerrar sesión en cualquier momento desde la sección Perfil.
-
-        5. Historial de escaneos
-        Los resultados de tus análisis se almacenan en tu cuenta para consulta personal. NailScan no garantiza la conservación indefinida de los datos; se recomienda conservar capturas relevantes si lo necesitas.
-
-        6. Limitación de responsabilidad
-        NailScan y sus desarrolladores no se hacen responsables de decisiones de salud tomadas exclusivamente con base en los resultados de la app. Ante cualquier duda o síntoma persistente, consulta a un profesional de salud.
-
-        7. Modificaciones
-        Podemos actualizar estos términos. El uso continuado de la app tras los cambios implica la aceptación de la versión vigente.
-
-        8. Contacto
-        Para consultas sobre estos términos escribe a soporte@nailscan.app.
-    """.trimIndent()
+    val termsAndConditions: String = termsSections.joinToString(separator = "\n\n") { section ->
+        "${section.title}\n${section.body}"
+    }
 
     val privacyPolicy: String = """
         1. Responsable del tratamiento
@@ -68,38 +98,33 @@ object AppContent {
         ¿Cómo escaneo una uña?
         Desde Inicio, pulsa el botón de cámara, toma una foto con buena iluminación o elige una imagen de la galería. Mantén la uña centrada y enfocada.
 
-        ¿Qué enfermedades detecta NailScan?
-        El modelo identifica 8 condiciones: acropaquia, dedo azul, melanoma acral, onicogrifosis, onicomicosis, picaduras/trauma, psoriasis ungueal y uñas sanas.
-
         ¿Es un diagnóstico médico?
         No. NailScan es una herramienta informativa. Siempre consulta a un dermatólogo para confirmación clínica.
 
-        ¿Por qué no funciona el escaneo?
-        Verifica que el archivo nail_model_nuevo.tflite esté en assets, que tengas conexión a internet para sincronizar el historial y que la imagen tenga suficiente luz y nitidez.
-
         ¿Cómo recupero mi contraseña?
-        En Iniciar sesión, pulsa «¿Olvidaste tu contraseña?», ingresa tu correo y abre el enlace de verificación en este dispositivo. La nueva contraseña se crea dentro de la app.
+        En Iniciar sesión, pulsa «¿Olvidaste tu contraseña?», ingresa tu correo y abre el enlace de verificación en este dispositivo.
+
+        Soporte
+        NailScan ofrece ayuda para dudas sobre el uso de la app, problemas al escanear, tu cuenta o la sincronización del historial. Los resultados son orientativos y no sustituyen una consulta médica.
 
         Contacto
-        Correo: soporte@nailscan.app
-        Horario de respuesta: lunes a viernes, 9:00–18:00 (hora de España).
+        Correo: 22221039@unamad.edu.pe
     """.trimIndent()
 
     val aboutMission: String = """
-        NailScan es una aplicación móvil de salud ungueal que te ayuda a detectar posibles alteraciones en tus uñas mediante inteligencia artificial entrenada localmente en tu dispositivo.
+        NailScan te ayuda a revisar el estado de tus uñas desde el celular. Toma una foto y recibe una orientación sobre posibles alteraciones ungueales para que puedas decidir si conviene consultar a un especialista.
     """.trimIndent()
 
     val aboutFeatures: String = """
-        • Análisis instantáneo con cámara o galería
-        • Modelo TFLite con 8 clases de condiciones ungueales
-        • Diccionario educativo con descripción, síntomas y causas
-        • Historial personal sincronizado con Firebase
-        • Cuenta segura con autenticación por correo
+        • Escanea tus uñas con la cámara o una foto de la galería
+        • Conoce posibles condiciones ungueales de forma clara
+        • Consulta el diccionario con descripción, síntomas y causas
+        • Revisa tu historial de escaneos cuando lo necesites
+        • Guarda tu información con una cuenta personal
     """.trimIndent()
 
     val aboutCredits: String = """
-        Desarrollado por el equipo NNailSScan.
-        Proyecto Firebase: nailscan-65b49
+        Desarrollado por un equipo de 3 estudiantes de la carrera de Ing. Sistemas e Informatica
     """.trimIndent()
 
     val aboutDisclaimer: String = """
@@ -115,40 +140,52 @@ object AppContent {
     )
 
     val aboutApp: String = """
-        NailScan es una aplicación móvil de salud ungueal desarrollada para ayudarte a detectar posibles alteraciones en tus uñas mediante inteligencia artificial.
+        NailScan te ayuda a revisar el estado de tus uñas desde el celular. Toma una foto y recibe una orientación sobre posibles alteraciones ungueales.
 
         Características principales
-        • Análisis instantáneo con cámara o galería
-        • Modelo TFLite entrenado con 8 clases de condiciones ungueales
-        • Diccionario educativo con descripción, síntomas y causas
-        • Historial personal de escaneos sincronizado con Firebase
-        • Cuenta segura con autenticación por correo
+        • Escanea tus uñas con la cámara o una foto de la galería
+        • Conoce posibles condiciones ungueales de forma clara
+        • Consulta el diccionario con descripción, síntomas y causas
+        • Revisa tu historial de escaneos cuando lo necesites
+        • Guarda tu información con una cuenta personal
 
         Versión
         $APP_VERSION
 
-        Desarrollado por el equipo NNailSScan.
-        Proyecto Firebase: nailscan-65b49
+        Desarrollado por un equipo de 3 estudiantes de la carrera de Ing. Sistemas e Informatica
 
         Recuerda: NailScan no reemplaza la atención médica profesional. Ante cualquier lesión sospechosa, especialmente bandas oscuras o cambios rápidos, consulta a un dermatólogo de inmediato.
     """.trimIndent()
 
-    val feedback: String = """
-        Tu opinión nos ayuda a mejorar NailScan.
+    val feedbackSections: List<AboutAppSection> = listOf(
+        AboutAppSection(
+            title = "Tu opinión importa",
+            body = """
+                Queremos que NailScan sea más útil para ti. Aquí puedes contarnos qué te gustaría mejorar, qué afección te gustaría que reconozca la app o si algo no funcionó como esperabas.
+            """.trimIndent(),
+        ),
+        AboutAppSection(
+            title = "Sugerir una afección",
+            body = """
+                ¿Hay alguna condición de las uñas que te gustaría que NailScan pueda identificar? Escríbenos indicando el nombre de la afección, los síntomas que sueles notar y por qué crees que sería útil incluirla.
+            """.trimIndent(),
+        ),
+        AboutAppSection(
+            title = "Reportar un problema",
+            body = """
+                Si un escaneo te dio un resultado que no coincide con lo que ves, cuéntanos qué pasó. Puedes incluir una breve descripción y, si lo deseas, una captura de pantalla del resultado.
+            """.trimIndent(),
+        ),
+        AboutAppSection(
+            title = "Contacto",
+            body = """
+                Para enviarnos sugerencias o reportes, escríbenos a:
+                Correo: 22221039@unamad.edu.pe
+            """.trimIndent(),
+        ),
+    )
 
-        Calificar la app
-        Si NailScan te resulta útil, déjanos una valoración en Google Play. Tus comentarios nos permiten priorizar mejoras en precisión del modelo, interfaz y nuevas funciones.
-
-        Sugerir una afección
-        ¿Hay alguna condición ungueal que te gustaría que el modelo detecte en el futuro? Escríbenos a feedback@nailscan.app indicando:
-        • Nombre de la afección
-        • Síntomas que observas
-        • Por qué sería útil incluirla
-
-        Reportar un error
-        Si un escaneo arrojó un resultado incorrecto, envíanos (sin datos personales sensibles) una descripción del caso y, si es posible, capturas de pantalla del resultado.
-
-        Contacto de retroalimentación
-        feedback@nailscan.app
-    """.trimIndent()
+    val feedback: String = feedbackSections.joinToString(separator = "\n\n") { section ->
+        "${section.title}\n${section.body}"
+    }
 }

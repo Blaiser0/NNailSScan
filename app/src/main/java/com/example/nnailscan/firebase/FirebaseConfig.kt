@@ -12,6 +12,7 @@ object FirebaseConfig {
     const val USERS_COLLECTION = "users"
     const val SCANS_COLLECTION = "scans"
     const val DICTIONARY_TERMS_COLLECTION = "dictionary_terms"
+    const val ADMIN_REQUESTS_COLLECTION = "admin_requests"
     private const val FALLBACK_STORAGE_BUCKET = "gs://nailscan-65b49.firebasestorage.app"
 
     val auth: FirebaseAuth

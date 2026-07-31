@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 800" preserveAspectRatio="xMidYMid meet" overflow="hidden" role="img" aria-label="DictionaryScreen" width="100%" height="100%" style="display:block;width:100%;height:100%;max-width:100%;max-height:100%;">
+<defs>
+<clipPath id="clip-dictionaryscreen"><rect x="0" y="0" width="360" height="800"/></clipPath>
+</defs>
+<style>
+svg { display: block; width: 100%; height: 100%; max-width: 100%; max-height: 100%; }
+.t { font-family: Arial, Helvetica, sans-serif; fill: #8B5E3C; }
+.ts { font-family: Arial, Helvetica, sans-serif; fill: #9C7355; }
+.tp { font-family: Arial, Helvetica, sans-serif; fill: #C4A484; }
+.tw { font-family: Arial, Helvetica, sans-serif; fill: #FFFFFF; }
+.tl { font-family: Arial, Helvetica, sans-serif; fill: #A0714F; }
+</style>
+<g id="screen" clip-path="url(#clip-dictionaryscreen)">
+<rect x="0" y="0" width="100%" height="100%" fill="#FFF8F0"/>
+<rect x="0" y="0" width="360" height="64" rx="0" fill="#FFFFFF"/>
+<text x="24" y="40" class="t" font-size="18" font-weight="bold" text-anchor="start">Diccionario de salud ungueal</text>
+<rect x="20" y="80" width="320" height="80" rx="14" fill="#FFFFFF"/>
+<rect x="34" y="94" width="52" height="52" rx="12" fill="#F5D1B3"/>
+<text x="98" y="114" class="t" font-size="16" font-weight="bold" text-anchor="start">Melanoma Acral</text>
+<text x="98" y="136" class="ts" font-size="13" font-weight="normal" text-anchor="start">Lesion pigmentada maligna</text>
+<rect x="20" y="172" width="320" height="80" rx="14" fill="#FFFFFF"/>
+<rect x="34" y="186" width="52" height="52" rx="12" fill="#F5D1B3"/>
+<text x="98" y="206" class="t" font-size="16" font-weight="bold" text-anchor="start">Onicogrifosis</text>
+<text x="98" y="228" class="ts" font-size="13" font-weight="normal" text-anchor="start">Engrosamiento de la una</text>
+<rect x="20" y="264" width="320" height="80" rx="14" fill="#FFFFFF"/>
+<rect x="34" y="278" width="52" height="52" rx="12" fill="#F5D1B3"/>
+<text x="98" y="298" class="t" font-size="16" font-weight="bold" text-anchor="start">Onicomicosis</text>
+<text x="98" y="320" class="ts" font-size="13" font-weight="normal" text-anchor="start">Infeccion fungica</text>
+<rect x="20" y="356" width="320" height="80" rx="14" fill="#FFFFFF"/>
+<rect x="34" y="370" width="52" height="52" rx="12" fill="#F5D1B3"/>
+<text x="98" y="390" class="t" font-size="16" font-weight="bold" text-anchor="start">Unas sanas</text>
+<text x="98" y="412" class="ts" font-size="13" font-weight="normal" text-anchor="start">Estado normal de la una</text>
+<rect x="0" y="736" width="360" height="64" rx="0" fill="#FFFFFF" stroke="#E8C4A8" stroke-width="1"/>
+<circle cx="60" cy="758" r="10" fill="#C4A484"/>
+<text x="60" y="784" class="tp" font-size="10" font-weight="normal" text-anchor="middle">Inicio</text>
+<circle cx="180" cy="758" r="10" fill="#8B5E3C"/>
+<text x="180" y="784" class="t" font-size="10" font-weight="normal" text-anchor="middle">Diccionario</text>
+<circle cx="300" cy="758" r="10" fill="#C4A484"/>
+<text x="300" y="784" class="tp" font-size="10" font-weight="normal" text-anchor="middle">Perfil</text>
+</g></svg>

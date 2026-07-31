@@ -1,10 +1,13 @@
 package com.example.nnailscan.firebase
 
+import com.example.nnailscan.data.model.AdminRequest
+import com.example.nnailscan.data.model.AdminRequestStatus
 import com.example.nnailscan.data.model.DictionaryContent
 import com.example.nnailscan.data.model.DictionaryTerm
 import com.example.nnailscan.data.model.DictionaryTermDetail
 import com.example.nnailscan.data.model.ScanRecord
 import com.example.nnailscan.data.model.UserProfile
+import com.example.nnailscan.data.model.UserRole
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
@@ -23,6 +26,7 @@ class FirestoreRepository {
                 mapOf(
                     "fullName" to profile.fullName,
                     "email" to profile.email,
+                    "role" to profile.role.firestoreValue,
                     "createdAt" to Timestamp.now(),
                 ),
             )
@@ -33,6 +37,7 @@ class FirestoreRepository {
         val data = mutableMapOf(
             "fullName" to profile.fullName,
             "email" to profile.email,
+            "role" to profile.role.firestoreValue,
         )
         if (profile.photoUrl.isNotBlank()) {
             data["photoUrl"] = profile.photoUrl
@@ -63,12 +68,169 @@ class FirestoreRepository {
             fullName = snapshot.getString("fullName").orEmpty(),
             email = snapshot.getString("email").orEmpty(),
             photoUrl = snapshot.getString("photoUrl").orEmpty(),
+            role = UserRole.fromFirestore(snapshot.getString("role")),
         )
     }
+
+    suspend fun updateUserRole(uid: String, role: UserRole): Result<Unit> = runCatching {
+        firestore.collection(FirebaseConfig.USERS_COLLECTION)
+            .document(uid)
+            .set(mapOf("role" to role.firestoreValue), SetOptions.merge())
+            .await()
+    }
+
+    suspend fun ensureDefaultAdmin(uid: String, email: String): Result<Unit> = runCatching {
+        if (email.equals(com.example.nnailscan.data.model.AdminConfig.DEFAULT_ADMIN_EMAIL, ignoreCase = true)) {
+            firestore.collection(FirebaseConfig.USERS_COLLECTION)
+                .document(uid)
+                .set(mapOf("role" to UserRole.ADMIN.firestoreValue), SetOptions.merge())
+                .await()
+        }
+    }
+
+    fun observeAllUsers(): Flow<List<UserProfile>> = callbackFlow {
+        val registration = firestore.collection(FirebaseConfig.USERS_COLLECTION)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    trySend(emptyList())
+                    return@addSnapshotListener
+                }
+                val users = snapshot?.documents.orEmpty().map { document ->
+                    UserProfile(
+                        uid = document.id,
+                        fullName = document.getString("fullName").orEmpty(),
+                        email = document.getString("email").orEmpty(),
+                        photoUrl = document.getString("photoUrl").orEmpty(),
+                        role = UserRole.fromFirestore(document.getString("role")),
+                    )
+                }.sortedBy { it.fullName.lowercase() }
+                trySend(users)
+            }
+        awaitClose { registration.remove() }
+    }
+
+    fun observeAllAppScans(limit: Long = 50): Flow<List<ScanRecord>> = callbackFlow {
+        val registration = firestore.collection(FirebaseConfig.SCANS_COLLECTION)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(limit)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    trySend(emptyList())
+                    return@addSnapshotListener
+                }
+                trySend(snapshot?.documents.orEmpty().map { it.toScanRecord() })
+            }
+        awaitClose { registration.remove() }
+    }
+
+    fun observeRecentAppScans(limit: Long = 3): Flow<List<ScanRecord>> = observeAllAppScans(limit)
+
+    fun observeAllAppScansForStats(): Flow<List<ScanRecord>> = callbackFlow {
+        val registration = firestore.collection(FirebaseConfig.SCANS_COLLECTION)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(500)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    trySend(emptyList())
+                    return@addSnapshotListener
+                }
+                trySend(snapshot?.documents.orEmpty().map { it.toScanRecord() })
+            }
+        awaitClose { registration.remove() }
+    }
+
+    suspend fun createAdminRequest(
+        userId: String,
+        email: String,
+        fullName: String,
+    ): Result<Unit> = runCatching {
+        val existing = firestore.collection(FirebaseConfig.ADMIN_REQUESTS_COLLECTION)
+            .whereEqualTo("userId", userId)
+            .whereEqualTo("status", AdminRequestStatus.PENDING.firestoreValue)
+            .get()
+            .await()
+        if (!existing.isEmpty) return@runCatching
+
+        firestore.collection(FirebaseConfig.ADMIN_REQUESTS_COLLECTION)
+            .document()
+            .set(
+                mapOf(
+                    "userId" to userId,
+                    "email" to email,
+                    "fullName" to fullName,
+                    "status" to AdminRequestStatus.PENDING.firestoreValue,
+                    "createdAt" to Timestamp.now(),
+                ),
+            )
+            .await()
+    }
+
+    suspend fun getPendingAdminRequestForUser(userId: String): Result<AdminRequest?> = runCatching {
+        val snapshot = firestore.collection(FirebaseConfig.ADMIN_REQUESTS_COLLECTION)
+            .whereEqualTo("userId", userId)
+            .whereEqualTo("status", AdminRequestStatus.PENDING.firestoreValue)
+            .limit(1)
+            .get()
+            .await()
+        snapshot.documents.firstOrNull()?.toAdminRequest()
+    }
+
+    fun observePendingAdminRequests(): Flow<List<AdminRequest>> = callbackFlow {
+        val registration = firestore.collection(FirebaseConfig.ADMIN_REQUESTS_COLLECTION)
+            .whereEqualTo("status", AdminRequestStatus.PENDING.firestoreValue)
+            .orderBy("createdAt", Query.Direction.ASCENDING)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    trySend(emptyList())
+                    return@addSnapshotListener
+                }
+                trySend(snapshot?.documents.orEmpty().map { it.toAdminRequest() })
+            }
+        awaitClose { registration.remove() }
+    }
+
+    suspend fun resolveAdminRequest(
+        requestId: String,
+        userId: String,
+        approve: Boolean,
+    ): Result<Unit> = runCatching {
+        val status = if (approve) AdminRequestStatus.APPROVED else AdminRequestStatus.DENIED
+        firestore.collection(FirebaseConfig.ADMIN_REQUESTS_COLLECTION)
+            .document(requestId)
+            .update("status", status.firestoreValue)
+            .await()
+        if (approve) {
+            updateUserRole(userId, UserRole.ADMIN).getOrThrow()
+        }
+    }
+
+    private fun com.google.firebase.firestore.DocumentSnapshot.toScanRecord(): ScanRecord =
+        ScanRecord(
+            id = id,
+            userId = getString("userId").orEmpty(),
+            userFullName = getString("userFullName").orEmpty(),
+            result = getString("result").orEmpty(),
+            rawLabel = getString("rawLabel").orEmpty(),
+            confidence = getDouble("confidence")?.toFloat() ?: 0f,
+            imageUrl = getString("imageUrl").orEmpty(),
+            dictionaryTermId = getString("dictionaryTermId").orEmpty(),
+            createdAt = getTimestamp("createdAt"),
+        )
+
+    private fun com.google.firebase.firestore.DocumentSnapshot.toAdminRequest(): AdminRequest =
+        AdminRequest(
+            id = id,
+            userId = getString("userId").orEmpty(),
+            email = getString("email").orEmpty(),
+            fullName = getString("fullName").orEmpty(),
+            status = AdminRequestStatus.fromFirestore(getString("status")),
+            createdAt = getTimestamp("createdAt"),
+        )
 
     suspend fun saveScan(
         scanId: String,
         userId: String,
+        userFullName: String,
         result: String,
         rawLabel: String,
         confidence: Float,
@@ -80,6 +242,7 @@ class FirestoreRepository {
             .set(
                 mapOf(
                     "userId" to userId,
+                    "userFullName" to userFullName,
                     "result" to result,
                     "rawLabel" to rawLabel,
                     "confidence" to confidence,
@@ -104,21 +267,12 @@ class FirestoreRepository {
             .limit(limit)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
-                    close(error)
+                    trySend(emptyList())
                     return@addSnapshotListener
                 }
 
                 val records = snapshot?.documents.orEmpty().map { document ->
-                    ScanRecord(
-                        id = document.id,
-                        userId = document.getString("userId").orEmpty(),
-                        result = document.getString("result").orEmpty(),
-                        rawLabel = document.getString("rawLabel").orEmpty(),
-                        confidence = document.getDouble("confidence")?.toFloat() ?: 0f,
-                        imageUrl = document.getString("imageUrl").orEmpty(),
-                        dictionaryTermId = document.getString("dictionaryTermId").orEmpty(),
-                        createdAt = document.getTimestamp("createdAt"),
-                    )
+                    document.toScanRecord()
                 }
                 trySend(records)
             }

@@ -12,6 +12,7 @@ import java.util.UUID
 class ScanRepository(
     private val firestoreRepository: FirestoreRepository = FirestoreRepository(),
     private val storageRepository: StorageRepository = StorageRepository(),
+    private val authRepository: AuthRepository = AuthRepository(),
 ) {
     suspend fun processAndPersistScan(
         context: Context,
@@ -31,9 +32,12 @@ class ScanRepository(
                 .uploadScanImage(userId, scanId, jpegBytes)
                 .getOrThrow()
 
+            val userFullName = authRepository.getUserProfile()?.fullName.orEmpty()
+
             firestoreRepository.saveScan(
                 scanId = scanId,
                 userId = userId,
+                userFullName = userFullName,
                 result = formattedLabel,
                 rawLabel = rawLabel,
                 confidence = confidence,

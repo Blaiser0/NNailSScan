@@ -61,7 +61,7 @@ fun TechnicalSupportScreen(
             onClick = {
                 ExternalIntents.sendEmail(
                     context = context,
-                    to = "soporte@nailscan.app",
+                    to = "22221039@unamad.edu.pe",
                     subject = "Soporte NailScan",
                     body = "Describe tu consulta o problema:\n\n",
                 )

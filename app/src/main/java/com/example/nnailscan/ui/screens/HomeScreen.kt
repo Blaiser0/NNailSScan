@@ -30,8 +30,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.nnailscan.data.model.ScanRecord
 import com.example.nnailscan.R
+import com.example.nnailscan.ui.components.AdminBadge
 import com.example.nnailscan.ui.components.ProfileAvatar
+import com.example.nnailscan.ui.components.ScanClassificationChart
 import com.example.nnailscan.ui.components.ScanHistoryCard
 import com.example.nnailscan.ui.theme.NailScanBackground
 import com.example.nnailscan.ui.theme.NailScanLink
@@ -43,12 +46,16 @@ import com.example.nnailscan.ui.theme.Typography
 import com.example.nnailscan.ui.viewmodel.HomeViewModel
 import com.example.nnailscan.util.formatScanDate
 import com.example.nnailscan.util.formatScanResult
+import com.example.nnailscan.util.resolveUserDisplayName
 
 @Composable
 fun HomeScreen(
     onScanClick: () -> Unit,
     onViewFullHistory: () -> Unit,
+    onRecentScanClick: (ScanRecord) -> Unit,
     onNavigateToProfile: () -> Unit,
+    isAdminViewMode: Boolean = false,
+    showAdminBadge: Boolean = false,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(),
 ) {
@@ -78,13 +85,18 @@ fun HomeScreen(
                     text = stringResource(R.string.home_greeting),
                     style = Typography.bodyMedium.copy(color = NailScanTextPrimary),
                 )
-                Text(
-                    text = uiState.userName,
-                    style = Typography.bodyMedium.copy(
-                        color = NailScanTextPrimary,
-                        fontWeight = FontWeight.Bold,
-                    ),
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = uiState.userName,
+                        style = Typography.bodyMedium.copy(
+                            color = NailScanTextPrimary,
+                            fontWeight = FontWeight.Bold,
+                        ),
+                    )
+                    if (showAdminBadge) {
+                        AdminBadge(modifier = Modifier.padding(start = 6.dp))
+                    }
+                }
             }
         }
 
@@ -108,6 +120,15 @@ fun HomeScreen(
         }
 
         Spacer(modifier = Modifier.height(40.dp))
+
+        if (isAdminViewMode) {
+            ScanClassificationChart(
+                stats = uiState.classificationStats,
+                totalScans = uiState.totalScans,
+                modifier = Modifier.padding(horizontal = 24.dp),
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+        }
 
         Text(
             text = stringResource(R.string.home_recent_activity),
@@ -138,6 +159,12 @@ fun HomeScreen(
                         dateLabel = formatScanDate(scan.createdAt),
                         result = formatScanResult(scan.result),
                         imageUrl = scan.imageUrl,
+                        userName = if (isAdminViewMode) {
+                            scan.resolveUserDisplayName(uiState.userNamesById)
+                        } else {
+                            null
+                        },
+                        onClick = { onRecentScanClick(scan) },
                     )
                 }
             }

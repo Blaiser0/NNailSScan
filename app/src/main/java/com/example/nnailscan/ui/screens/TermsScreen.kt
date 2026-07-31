@@ -46,18 +46,17 @@ fun TermsScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(NailScanSurface, RoundedCornerShape(16.dp))
-                .padding(horizontal = 20.dp, vertical = 24.dp),
-        ) {
-            ContentTextBlock(text = AppContent.termsAndConditions)
+        AppContent.termsSections.forEach { section ->
+            AboutInfoCard(
+                title = section.title,
+                body = section.body,
+            )
+            Spacer(modifier = Modifier.height(12.dp))
         }
 
-        Spacer(modifier = Modifier.height(28.dp))
-
         if (includePrivacySection) {
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text(
                 text = stringResource(R.string.terms_privacy_title),
                 modifier = Modifier.fillMaxWidth(),

@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nnailscan.R
 import com.example.nnailscan.navigation.ProfileDestination
+import com.example.nnailscan.ui.components.AdminBadge
 import com.example.nnailscan.ui.components.NailScanPrimaryButton
 import com.example.nnailscan.ui.components.ProfileAvatar
 import com.example.nnailscan.ui.components.ProfileMenuOptionCard
@@ -49,6 +50,7 @@ import com.example.nnailscan.ui.viewmodel.ProfileViewModel
 fun ProfileScreen(
     onLogout: () -> Unit,
     onNavigate: (ProfileDestination) -> Unit,
+    showAdminBadge: Boolean = false,
     modifier: Modifier = Modifier,
     viewModel: ProfileViewModel = viewModel(),
 ) {
@@ -90,13 +92,18 @@ fun ProfileScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     androidx.compose.foundation.layout.Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = displayName,
-                            style = Typography.bodyLarge.copy(
-                                color = NailScanTextPrimary,
-                                fontWeight = FontWeight.Bold,
-                            ),
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = displayName,
+                                style = Typography.bodyLarge.copy(
+                                    color = NailScanTextPrimary,
+                                    fontWeight = FontWeight.Bold,
+                                ),
+                            )
+                            if (showAdminBadge) {
+                                AdminBadge(modifier = Modifier.padding(start = 6.dp))
+                            }
+                        }
                         Text(
                             text = displayEmail,
                             style = Typography.labelLarge.copy(color = NailScanTextSecondary),

@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NailScan — Arquitectura de la red neuronal</title>
+  <style>
+    :root {
+      --bg: #FFF8F0;
+      --surface: #FFFFFF;
+      --primary: #8B5E3C;
+      --accent: #D4A373;
+      --accent-dark: #A0714F;
+      --light: #F5D1B3;
+      --border: #E8C4A8;
+      --secondary: #9C7355;
+      --text: #3d2a1a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+    header {
+      background: linear-gradient(135deg, #8B5E3C, #D4A373);
+      color: #fff;
+      text-align: center;
+      padding: 32px 20px;
+    }
+    header h1 { font-size: 1.75rem; margin-bottom: 4px; }
+    header p { opacity: 0.92; font-size: 0.95rem; }
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 16px 48px;
+    }
+    .canvas-wrap {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 24px;
+      padding: 20px 12px 28px;
+      box-shadow: 0 10px 40px rgba(139,94,60,0.12);
+      overflow-x: auto;
+    }
+    .canvas-wrap h2 {
+      text-align: center;
+      color: var(--primary);
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+    .canvas-wrap .subtitle {
+      text-align: center;
+      color: var(--secondary);
+      font-size: 0.82rem;
+      margin-bottom: 16px;
+    }
+    svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 20px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.78rem;
+      color: var(--secondary);
+    }
+    .legend-swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+    .bottom-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 24px;
+    }
+    @media (max-width: 780px) {
+      .bottom-row { grid-template-columns: 1fr; }
+    }
+    .mini-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .mini-card h3 {
+      color: var(--primary);
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--secondary);
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Arquitectura de la red neuronal</h1>
+  <p>NailScan · EfficientNetB1 → diagnóstico en el celular</p>
+</header>
+
+<main>
+
+  <div class="canvas-wrap">
+    <h2>Gráfico de la red</h2>
+    <p class="subtitle">De la foto de uña al diagnóstico · transfer learning</p>
+
+    <svg viewBox="0 0 980 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagrama de arquitectura neural NailScan">
+      <defs>
+        <linearGradient id="gInput" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#F5D1B3"/>
+          <stop offset="100%" stop-color="#C4A484"/>
+        </linearGradient>
+        <linearGradient id="gCnn" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#6B4528"/>
+          <stop offset="100%" stop-color="#8B5E3C"/>
+        </linearGradient>
+        <linearGradient id="gPool" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#A0714F"/>
+          <stop offset="100%" stop-color="#8B5E3C"/>
+        </linearGradient>
+        <linearGradient id="gDense" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#D4A373"/>
+          <stop offset="100%" stop-color="#F5D1B3"/>
+        </linearGradient>
+        <linearGradient id="gOut" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#9C7355"/>
+          <stop offset="100%" stop-color="#8B5E3C"/>
+        </linearGradient>
+        <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#D4A373"/>
+        </marker>
+        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#8B5E3C" flood-opacity="0.18"/>
+        </filter>
+      </defs>
+
+      <!-- Fondo suave del flujo -->
+      <rect x="30" y="70" width="920" height="300" rx="20" fill="#FFF8F0" stroke="#E8C4A8" stroke-width="1.5"/>
+
+      <!-- ═══ 1. ENTRADA: imagen ═══ -->
+      <g filter="url(#shadow)">
+        <rect x="50" y="130" width="100" height="100" rx="10" fill="url(#gInput)" stroke="#8B5E3C" stroke-width="2"/>
+        <!-- mini grid = píxeles -->
+        <g stroke="#8B5E3C" stroke-width="0.6" opacity="0.35">
+          <line x1="50" y1="155" x2="150" y2="155"/><line x1="50" y1="180" x2="150" y2="180"/>
+          <line x1="50" y1="205" x2="150" y2="205"/><line x1="75" y1="130" x2="75" y2="230"/>
+          <line x1="100" y1="130" x2="100" y2="230"/><line x1="125" y1="130" x2="125" y2="230"/>
+        </g>
+        <!-- uña estilizada -->
+        <ellipse cx="100" cy="175" rx="22" ry="30" fill="#E8C4A8" opacity="0.7"/>
+      </g>
+      <text x="100" y="118" text-anchor="middle" fill="#8B5E3C" font-size="13" font-weight="700">📷 Entrada</text>
+      <text x="100" y="255" text-anchor="middle" fill="#9C7355" font-size="11">240×240×3</text>
+
+      <line x1="155" y1="180" x2="185" y2="180" stroke="#D4A373" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+      <!-- ═══ 2. EfficientNetB1: bloques CNN ═══ -->
+      <text x="280" y="118" text-anchor="middle" fill="#8B5E3C" font-size="13" font-weight="700">🧠 EfficientNetB1</text>
+      <text x="280" y="268" text-anchor="middle" fill="#9C7355" font-size="10">ImageNet · extrae patrones</text>
+
+      <!-- capas conv decrecientes (efecto visual CNN) -->
+      <g filter="url(#shadow)">
+        <rect x="195" y="115" width="70" height="130" rx="6" fill="url(#gCnn)" opacity="0.55"/>
+        <rect x="215" y="125" width="58" height="110" rx="6" fill="url(#gCnn)" opacity="0.7"/>
+        <rect x="233" y="135" width="46" height="90" rx="6" fill="url(#gCnn)" opacity="0.85"/>
+        <rect x="249" y="145" width="34" height="70" rx="6" fill="url(#gCnn)"/>
+        <rect x="263" y="155" width="22" height="50" rx="4" fill="#5A3820"/>
+      </g>
+      <!-- etiquetas conv -->
+      <text x="230" y="108" fill="#9C7355" font-size="9">Conv</text>
+      <text x="268" y="108" fill="#9C7355" font-size="9">MBConv</text>
+
+      <line x1="295" y1="180" x2="325" y2="180" stroke="#D4A373" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+      <!-- ═══ 3. Pooling ═══ -->
+      <g filter="url(#shadow)">
+        <rect x="330" y="155" width="50" height="50" rx="25" fill="url(#gPool)"/>
+        <text x="355" y="183" text-anchor="middle" fill="#fff" font-size="18">∅</text>
+      </g>
+      <text x="355" y="118" text-anchor="middle" fill="#8B5E3C" font-size="12" font-weight="700">Pooling</text>
+      <text x="355" y="230" text-anchor="middle" fill="#9C7355" font-size="10">Global Avg</text>
+
+      <line x1="385" y1="180" x2="415" y2="180" stroke="#D4A373" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+      <!-- ═══ 4. Cabeza densa (barras) ═══ -->
+      <text x="490" y="118" text-anchor="middle" fill="#8B5E3C" font-size="13" font-weight="700">Cabeza densa</text>
+      <text x="490" y="268" text-anchor="middle" fill="#9C7355" font-size="10">Clasificador NailScan</text>
+
+      <g filter="url(#shadow)">
+        <!-- Dense 512 -->
+        <rect x="420" y="140" width="140" height="22" rx="6" fill="url(#gDense)" stroke="#A0714F" stroke-width="1"/>
+        <text x="490" y="155" text-anchor="middle" fill="#3d2a1a" font-size="10" font-weight="600">Dense 512 · ReLU · Drop 45%</text>
+        <!-- Dense 256 -->
+        <rect x="435" y="172" width="110" height="22" rx="6" fill="url(#gDense)" stroke="#A0714F" stroke-width="1"/>
+        <text x="490" y="187" text-anchor="middle" fill="#3d2a1a" font-size="10" font-weight="600">Dense 256 · ReLU · Drop 30%</text>
+        <!-- Softmax 8 -->
+        <rect x="450" y="204" width="80" height="22" rx="6" fill="url(#gOut)"/>
+        <text x="490" y="219" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">Softmax · 8</text>
+      </g>
+
+      <line x1="565" y1="180" x2="595" y2="180" stroke="#D4A373" stroke-width="2.5" marker-end="url(#arrow)"/>
+
+      <!-- ═══ 5. SALIDA: barras de probabilidad ═══ -->
+      <text x="720" y="118" text-anchor="middle" fill="#8B5E3C" font-size="13" font-weight="700">📊 Diagnóstico</text>
+
+      <!-- 8 barras verticales -->
+      <g font-size="8" fill="#9C7355">
+        <rect x="610" y="195" width="18" height="12" rx="2" fill="#E8C4A8"/>
+        <rect x="635" y="188" width="18" height="19" rx="2" fill="#E8C4A8"/>
+        <rect x="660" y="200" width="18" height="7" rx="2" fill="#E8C4A8"/>
+        <rect x="685" y="192" width="18" height="15" rx="2" fill="#E8C4A8"/>
+        <!-- onicomicosis ganadora -->
+        <rect x="710" y="120" width="22" height="87" rx="3" fill="#8B5E3C"/>
+        <text x="721" y="115" text-anchor="middle" fill="#8B5E3C" font-size="9" font-weight="700">87%</text>
+        <rect x="740" y="198" width="18" height="9" rx="2" fill="#E8C4A8"/>
+        <rect x="765" y="190" width="18" height="17" rx="2" fill="#E8C4A8"/>
+        <rect x="790" y="202" width="18" height="5" rx="2" fill="#E8C4A8"/>
+      </g>
+
+      <!-- resultado destacado -->
+      <g filter="url(#shadow)">
+        <rect x="650" y="240" width="140" height="44" rx="12" fill="#8B5E3C"/>
+        <text x="720" y="260" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Onicomicosis</text>
+        <text x="720" y="276" text-anchor="middle" fill="#F5D1B3" font-size="10">confianza 87.3%</text>
+      </g>
+
+      <!-- ═══ BANDA INFERIOR: celular ═══ -->
+      <rect x="50" y="390" width="880" height="110" rx="16" fill="#FFF3E8" stroke="#E8C4A8" stroke-width="1.5"/>
+      <text x="70" y="418" fill="#8B5E3C" font-size="12" font-weight="700">En el celular (NailClassifier.kt)</text>
+
+      <!-- mini pipeline -->
+      <g font-size="11" fill="#9C7355">
+        <rect x="70" y="435" width="90" height="36" rx="8" fill="#fff" stroke="#E8C4A8"/>
+        <text x="115" y="457" text-anchor="middle">Foto uña</text>
+
+        <text x="175" y="457">→</text>
+
+        <rect x="190" y="435" width="110" height="36" rx="8" fill="#fff" stroke="#E8C4A8"/>
+        <text x="245" y="457" text-anchor="middle">Redimensionar</text>
+
+        <text x="315" y="457">→</text>
+
+        <rect x="330" y="435" width="130" height="36" rx="8" fill="#fff" stroke="#D4A373" stroke-width="2"/>
+        <text x="395" y="457" text-anchor="middle" font-weight="600" fill="#8B5E3C">.tflite on-device</text>
+
+        <text x="475" y="457">→</text>
+
+        <rect x="490" y="435" width="100" height="36" rx="8" fill="#fff" stroke="#E8C4A8"/>
+        <text x="540" y="457" text-anchor="middle">Softmax</text>
+
+        <text x="605" y="457">→</text>
+
+        <rect x="620" y="435" width="130" height="36" rx="8" fill="#8B5E3C"/>
+        <text x="685" y="457" text-anchor="middle" fill="#fff" font-weight="600">Resultado</text>
+
+        <text x="770" y="457" fill="#A0714F" font-size="10">sin internet ⚡</text>
+      </g>
+
+      <!-- ═══ BANDA SUPERIOR: entrenamiento 3 fases ═══ -->
+      <text x="490" y="42" text-anchor="middle" fill="#8B5E3C" font-size="12" font-weight="700">Entrenamiento (entrenar_modelo.py)</text>
+
+      <!-- fase 1 -->
+      <rect x="80" y="52" width="240" height="14" rx="7" fill="#E8C4A8"/>
+      <rect x="80" y="52" width="80" height="14" rx="7" fill="#8B5E3C"/>
+      <text x="200" y="63" text-anchor="middle" fill="#fff" font-size="9" font-weight="600">Fase 1 · Cabeza</text>
+
+      <!-- fase 2 -->
+      <rect x="340" y="52" width="240" height="14" rx="7" fill="#E8C4A8"/>
+      <rect x="340" y="52" width="160" height="14" rx="7" fill="#A0714F"/>
+      <text x="460" y="63" text-anchor="middle" fill="#fff" font-size="9" font-weight="600">Fase 2 · Fine-tune 35 capas</text>
+
+      <!-- fase 3 -->
+      <rect x="600" y="52" width="240" height="14" rx="7" fill="#E8C4A8"/>
+      <rect x="600" y="52" width="220" height="14" rx="7" fill="#D4A373"/>
+      <text x="720" y="63" text-anchor="middle" fill="#3d2a1a" font-size="9" font-weight="600">Fase 3 · Fine-tune 70 capas → .tflite</text>
+
+    </svg>
+
+    <div class="legend">
+      <div class="legend-item"><span class="legend-swatch" style="background:#F5D1B3"></span> Entrada imagen</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#6B4528"></span> CNN EfficientNetB1</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#A0714F"></span> Pooling</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#D4A373"></span> Capas densas</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:#8B5E3C"></span> Diagnóstico final</div>
+    </div>
+  </div>
+
+  <div class="bottom-row">
+
+    <div class="mini-card">
+      <h3>8 enfermedades que detecta</h3>
+      <svg viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
+        <g font-size="10" fill="#8B5E3C">
+          <circle cx="55" cy="30" r="22" fill="#FFF3E8" stroke="#E8C4A8"/><text x="55" y="34" text-anchor="middle">acropaquia</text>
+          <circle cx="145" cy="30" r="22" fill="#FFF3E8" stroke="#E8C4A8"/><text x="145" y="34" text-anchor="middle">dedo_azul</text>
+          <circle cx="235" cy="30" r="28" fill="#FFF3E8" stroke="#E8C4A8"/><text x="235" y="34" text-anchor="middle" font-size="9">melanoma_acral</text>
+          <circle cx="335" cy="30" r="28" fill="#FFF3E8" stroke="#E8C4A8"/><text x="335" y="34" text-anchor="middle" font-size="9">onicogrifosis</text>
+          <circle cx="55" cy="85" r="26" fill="#F5D1B3" stroke="#8B5E3C" stroke-width="2"/><text x="55" y="89" text-anchor="middle" font-weight="700">onicomicosis</text>
+          <circle cx="155" cy="85" r="22" fill="#FFF3E8" stroke="#E8C4A8"/><text x="155" y="89" text-anchor="middle">picaduras</text>
+          <circle cx="255" cy="85" r="28" fill="#FFF3E8" stroke="#E8C4A8"/><text x="255" y="89" text-anchor="middle" font-size="9">psoriasis_unas</text>
+          <circle cx="345" cy="85" r="24" fill="#FFF3E8" stroke="#E8C4A8"/><text x="345" y="89" text-anchor="middle" font-size="9">unas_sanas</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="mini-card">
+      <h3>Idea clave: transfer learning</h3>
+      <svg viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="35" width="110" height="50" rx="10" fill="#6B4528"/>
+        <text x="65" y="58" text-anchor="middle" fill="#fff" font-size="10" font-weight="600">ImageNet</text>
+        <text x="65" y="72" text-anchor="middle" fill="#F5D1B3" font-size="9">ya sabe ver</text>
+
+        <text x="135" y="65" fill="#D4A373" font-size="20">+</text>
+
+        <rect x="155" y="35" width="110" height="50" rx="10" fill="#D4A373"/>
+        <text x="210" y="58" text-anchor="middle" fill="#3d2a1a" font-size="10" font-weight="600">Dataset uñas</text>
+        <text x="210" y="72" text-anchor="middle" fill="#3d2a1a" font-size="9">especializa</text>
+
+        <text x="280" y="65" fill="#D4A373" font-size="20">=</text>
+
+        <rect x="295" y="30" width="95" height="60" rx="10" fill="#8B5E3C"/>
+        <text x="342" y="55" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">NailScan</text>
+        <text x="342" y="72" text-anchor="middle" fill="#F5D1B3" font-size="9">8 clases</text>
+
+        <text x="200" y="110" text-anchor="middle" fill="#9C7355" font-size="10">No entrena desde cero · reutiliza conocimiento visual</text>
+      </svg>
+    </div>
+
+  </div>
+
+</main>
+
+<footer>NailScan · ARQUITECTURA_RED_NEURONAL.html · Ctrl+P para PDF</footer>
+
+</body>
+</html>

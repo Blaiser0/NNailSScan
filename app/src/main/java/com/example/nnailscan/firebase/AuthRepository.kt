@@ -1,6 +1,7 @@
 package com.example.nnailscan.firebase
 
 import com.example.nnailscan.data.model.UserProfile
+import com.example.nnailscan.data.model.UserRole
 import com.example.nnailscan.util.PasswordValidator
 import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuthException
@@ -46,6 +47,7 @@ class AuthRepository(
                 uid = user.uid,
                 fullName = trimmedName,
                 email = trimmedEmail,
+                role = UserRole.USER,
             ),
         ).getOrThrow()
     }.fold(
@@ -55,6 +57,8 @@ class AuthRepository(
 
     suspend fun getUserProfile(): UserProfile? {
         val uid = currentUser?.uid ?: return null
+        val email = currentUser?.email.orEmpty()
+        firestoreRepository.ensureDefaultAdmin(uid, email)
         val firestoreProfile = firestoreRepository.getUserProfile(uid).getOrNull()
         val authPhotoUrl = currentUser?.photoUrl?.toString().orEmpty()
         return firestoreProfile?.copy(
@@ -65,6 +69,7 @@ class AuthRepository(
                 fullName = user.displayName.orEmpty().ifBlank { "Usuario" },
                 email = user.email.orEmpty(),
                 photoUrl = user.photoUrl?.toString().orEmpty(),
+                role = UserRole.USER,
             )
         }
     }
@@ -108,6 +113,7 @@ class AuthRepository(
                 fullName = trimmedName,
                 email = user.email.orEmpty(),
                 photoUrl = getUserProfile()?.photoUrl.orEmpty(),
+                role = getUserProfile()?.role ?: UserRole.USER,
             ),
         ).getOrThrow()
     }.fold(

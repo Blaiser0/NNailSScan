@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diagramas UML - NailScan</title>
+  <style>
+    body { margin: 0; background: #f8fafc; color: #0f172a; font-family: Arial, sans-serif; }
+    header { padding: 32px; background: #ffffff; border-bottom: 1px solid #e2e8f0; }
+    h1 { margin: 0 0 8px; font-size: 30px; }
+    p { margin: 0; color: #475569; }
+    main { padding: 32px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+    a.card {
+      display: block;
+      padding: 22px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      color: #0f172a;
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+    a.card:hover { border-color: #2563eb; transform: translateY(-1px); }
+    .number { color: #2563eb; font-weight: 700; font-size: 14px; }
+    .title { display: block; margin-top: 8px; font-size: 20px; font-weight: 700; }
+    .desc { display: block; margin-top: 8px; color: #64748b; line-height: 1.45; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Diagramas UML - NailScan</h1>
+    <p>Indice de diagramas HTML renderizados con Mermaid, similares al preview del Markdown.</p>
+  </header>
+  <main>
+    <section class="grid">
+      <a class="card" href="uml_1_casos_uso.html">
+        <span class="number">01</span>
+        <span class="title">Casos de Uso</span>
+        <span class="desc">Acciones disponibles para usuario y administrador.</span>
+      </a>
+      <a class="card" href="uml_2_clases.html">
+        <span class="number">02</span>
+        <span class="title">Clases</span>
+        <span class="desc">Modelos, repositorios, ViewModels y relaciones principales.</span>
+      </a>
+      <a class="card" href="uml_3_componentes.html">
+        <span class="number">03</span>
+        <span class="title">Componentes</span>
+        <span class="desc">Arquitectura por capas de la aplicacion.</span>
+      </a>
+      <a class="card" href="uml_4_secuencia_escaneo.html">
+        <span class="number">04</span>
+        <span class="title">Secuencia de Escaneo</span>
+        <span class="desc">Flujo desde la imagen hasta el resultado guardado.</span>
+      </a>
+      <a class="card" href="uml_5_secuencia_admin.html">
+        <span class="number">05</span>
+        <span class="title">Solicitud de Administrador</span>
+        <span class="desc">Proceso de solicitud, aprobacion y cambio de rol.</span>
+      </a>
+      <a class="card" href="uml_6_estado_admin.html">
+        <span class="number">06</span>
+        <span class="title">Estado Modo Admin</span>
+        <span class="desc">Estados principales entre usuario y administrador.</span>
+      </a>
+      <a class="card" href="uml_7_despliegue.html">
+        <span class="number">07</span>
+        <span class="title">Despliegue</span>
+        <span class="desc">APK, TensorFlow Lite y servicios Firebase.</span>
+      </a>
+    </section>
+  </main>
+</body>
+</html>

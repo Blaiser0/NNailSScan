@@ -22,12 +22,14 @@ object NailScanAuthBrandingDefaults {
 @Composable
 fun NailScanAuthBranding(
     modifier: Modifier = Modifier,
+    onLogoTripleClick: (() -> Unit)? = null,
 ) {
     NailScanBrandHeader(
         modifier = modifier.fillMaxWidth(),
         size = BrandHeaderSize.Large,
         showTagline = false,
         showTitle = true,
+        onLogoTripleClick = onLogoTripleClick,
     )
 }
 
@@ -36,7 +38,8 @@ fun NailScanAuthBranding(
 fun NailScanAuthBrandingSection(
     modifier: Modifier = Modifier,
     contentSpacing: Dp = NailScanAuthBrandingDefaults.brandingToContentSpacing,
+    onLogoTripleClick: (() -> Unit)? = null,
 ) {
-    NailScanAuthBranding(modifier = modifier)
+    NailScanAuthBranding(modifier = modifier, onLogoTripleClick = onLogoTripleClick)
     Spacer(modifier = Modifier.height(contentSpacing))
 }
